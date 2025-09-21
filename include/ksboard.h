@@ -17,9 +17,9 @@ typedef struct {
     unsigned int pd_mode;
     unsigned int power_mode;
     unsigned int use_filter;
-} pin_config_t;
+} port_out_config_t;
 
-void pin_config(volatile mdr_port_t *port, unsigned int port_out,  const pin_config_t *config);
+void pin_config(volatile mdr_port_t *port, unsigned int port_out,  const port_out_config_t *config);
 
 unsigned int pin_digital_read(volatile mdr_port_t *port, unsigned int port_out);
 void pin_digital_write(volatile mdr_port_t *port, unsigned int port_out, unsigned int data);

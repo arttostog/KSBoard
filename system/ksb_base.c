@@ -1,4 +1,5 @@
 #include <ksboard.h>
+#include <K1986BE92F1I.h>
 
 void delay(unsigned int milliseconds) {
     SYS_TICK->load = LSI_FREQUENCY - 1;
@@ -12,7 +13,7 @@ void delay(unsigned int milliseconds) {
     SYS_TICK->ctrl = 0;
 }
 
-void pin_config(volatile mdr_port_t *port, unsigned int port_out, const pin_config_t *config) {
+void pin_config(volatile mdr_port_t *port, unsigned int port_out, const port_out_config_t *config) {
     port_out &= 15;
     
     port->oe = (port->oe & ~(1 << port_out)) | ((config->is_output & 1) << port_out);
