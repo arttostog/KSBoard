@@ -21,7 +21,7 @@ void pin_config(volatile mdr_port_t *port, unsigned int port_out, const pin_conf
 
     port->analog = (port->analog & ~(1 << port_out)) | ((config->is_digital & 1) << port_out);
 
-    port->pull = (port->pull & ~((1 << port_out) + (1 << port_out + 16))) | (((config->enable_pull_down & 1) << port_out) + ((config->enable_pull_up & 1) << (port_out + 16)));
+    port->pull = (port->pull & ~((1 << port_out) + (1 << (port_out + 16)))) | (((config->enable_pull_down & 1) << port_out) + ((config->enable_pull_up & 1) << (port_out + 16)));
 
     port->pd = (port->pd & ~((1 << port_out) + (1 << (port_out + 16)))) | (((config->pd_mode & 1) << port_out) + ((config->shm_mode & 1) << (port_out + 16)));
 
@@ -38,10 +38,10 @@ void pin_digital_write(volatile mdr_port_t *port, unsigned int port_out, unsigne
     port->rxtx = (port->rxtx & ~(1 << port_out)) | ((data & 1) << port_out);
 }
 
-unsigned int pin_analog_read(volatile mdr_port_t *port, unsigned int port_out) {
-    return 0;
-}
+// unsigned int pin_analog_read(volatile mdr_port_t *port, unsigned int port_out) {
+//     return 0;
+// }
 
-void pin_analog_write(volatile mdr_port_t *port, unsigned int port_out, unsigned int data) {
+// void pin_analog_write(volatile mdr_port_t *port, unsigned int port_out, unsigned int data) {
 
-}
+// }
