@@ -1,5 +1,4 @@
 #include <ksboard.h>
-#include <K1986BE92F1I.h>
 
 void delay(unsigned int milliseconds) {
     SYS_TICK->load = LSI_FREQUENCY - 1;
