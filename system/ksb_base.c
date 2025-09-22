@@ -12,7 +12,7 @@ void delay(unsigned int milliseconds) {
     SYS_TICK->ctrl = 0;
 }
 
-void pin_config(volatile mdr_port_t *port, unsigned int port_out, const port_out_config_t *config) {
+void port_out_config(volatile mdr_port_t *port, unsigned int port_out, const port_out_config_t *config) {
     port_out &= 15;
     port->oe = (port->oe & ~(1 << port_out)) | ((config->is_output & 1) << port_out);
     port->func = (port->func & ~(3 << (port_out * 2))) | ((config->function & 3) << (port_out * 2));
@@ -23,15 +23,15 @@ void pin_config(volatile mdr_port_t *port, unsigned int port_out, const port_out
     port->gfen = (port->gfen & ~(1 << port_out)) | ((config->use_filter & 1) << port_out);
 }
 
-unsigned int pin_digital_read(volatile mdr_port_t *port, unsigned int port_out) {
+unsigned int digital_read(volatile mdr_port_t *port, unsigned int port_out) {
     return (port->rxtx & (1 << port_out)) >> port_out;
 }
 
-void pin_digital_write(volatile mdr_port_t *port, unsigned int port_out, unsigned int data) {
+void digital_write(volatile mdr_port_t *port, unsigned int port_out, unsigned int data) {
     port->rxtx = (port->rxtx & ~(1 << port_out)) | ((data & 1) << port_out);
 }
 
-unsigned int pin_analog_read(unsigned int port_out) {
+unsigned int analog_read(unsigned int port_out) {
     MDR_ADC->adc2_cfg = 1 | (port_out & 31) << 4;
     MDR_ADC->adc2_cfg |= 1 << 1;
     delay(1); // TODO: Надо бы высчитать общее время преобразования

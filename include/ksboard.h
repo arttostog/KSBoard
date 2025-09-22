@@ -19,10 +19,10 @@ typedef struct {
     unsigned int use_filter;
 } port_out_config_t;
 
-void pin_config(volatile mdr_port_t *port, unsigned int port_out,  const port_out_config_t *config);
+void port_out_config(volatile mdr_port_t *port, unsigned int port_out,  const port_out_config_t *config);
 
-unsigned int pin_digital_read(volatile mdr_port_t *port, unsigned int port_out);
-void pin_digital_write(volatile mdr_port_t *port, unsigned int port_out, unsigned int data);
+unsigned int digital_read(volatile mdr_port_t *port, unsigned int port_out);
+void digital_write(volatile mdr_port_t *port, unsigned int port_out, unsigned int data);
 
-// unsigned int pin_analog_read(volatile mdr_port_t *port, unsigned int port_out);
+unsigned int pin_analog_read(unsigned int port_out);
 // void pin_analog_write(volatile mdr_port_t *port, unsigned int port_out, unsigned int data);
