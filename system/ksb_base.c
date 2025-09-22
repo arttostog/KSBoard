@@ -40,7 +40,7 @@ unsigned int analog_read(unsigned int port_out) {
     return read_result;
 }
 
-void analog_write(volatile mdr_port_t *port, unsigned int port_out, unsigned int data) {
-    MDR_DAC->dac1_data = data & 2047;
+void analog_write(unsigned int data) {
+    MDR_DAC->dac2_data = data & 2047;
     MDR_DAC->cfg = 1 << 3;
 }

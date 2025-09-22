@@ -25,4 +25,4 @@ unsigned int digital_read(volatile mdr_port_t *port, unsigned int port_out);
 void digital_write(volatile mdr_port_t *port, unsigned int port_out, unsigned int data);
 
 unsigned int analog_read(unsigned int port_out);
-void analog_write(volatile mdr_port_t *port, unsigned int port_out, unsigned int data);
+void analog_write(unsigned int data);
