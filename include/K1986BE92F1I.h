@@ -2441,7 +2441,7 @@ enum MDR_WWDG_CFR {
     MDR_WWDG_CFR_W_4    = 1   << 4,
     MDR_WWDG_CFR_W_5    = 1   << 5,
     MDR_WWDG_CFR_W_6    = 1   << 6,
-    MDR_WWDG_CFR_WGTB   = 3,
+    MDR_WWDG_CFR_WGTB   = 3   << 7,
     MDR_WWDG_CFR_WGTB_1 = 1   << 7,
     MDR_WWDG_CFR_WGTB_2 = 1   << 8,
     MDR_WWDG_CFR_EWI    = 1   << 9,
