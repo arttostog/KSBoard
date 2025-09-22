@@ -24,5 +24,5 @@ void port_out_config(volatile mdr_port_t *port, unsigned int port_out,  const po
 unsigned int digital_read(volatile mdr_port_t *port, unsigned int port_out);
 void digital_write(volatile mdr_port_t *port, unsigned int port_out, unsigned int data);
 
-unsigned int pin_analog_read(unsigned int port_out);
-// void pin_analog_write(volatile mdr_port_t *port, unsigned int port_out, unsigned int data);
+unsigned int analog_read(unsigned int port_out);
+// void analog_write(volatile mdr_port_t *port, unsigned int port_out, unsigned int data);

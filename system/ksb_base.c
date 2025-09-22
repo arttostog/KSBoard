@@ -40,6 +40,6 @@ unsigned int analog_read(unsigned int port_out) {
     return read_result;
 }
 
-// void pin_analog_write(volatile mdr_port_t *port, unsigned int port_out, unsigned int data) {
+// void analog_write(volatile mdr_port_t *port, unsigned int port_out, unsigned int data) {
 //     return;
 // }
