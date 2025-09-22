@@ -5,24 +5,24 @@
 void board_start();
 void board_loop();
 
-void delay(unsigned int milliseconds);
+void delay(bit_depth_t milliseconds);
 
 typedef struct {
-    unsigned int is_output;
-    unsigned int function;
-    unsigned int is_digital;
-    unsigned int enable_pull_up;
-    unsigned int enable_pull_down;
-    unsigned int shm_mode;
-    unsigned int pd_mode;
-    unsigned int power_mode;
-    unsigned int use_filter;
+    bit_depth_t is_output;
+    bit_depth_t function;
+    bit_depth_t is_digital;
+    bit_depth_t enable_pull_up;
+    bit_depth_t enable_pull_down;
+    bit_depth_t shm_mode;
+    bit_depth_t pd_mode;
+    bit_depth_t power_mode;
+    bit_depth_t use_filter;
 } port_out_config_t;
 
-void port_out_config(volatile mdr_port_t *port, unsigned int port_out,  const port_out_config_t *config);
+void port_out_config(volatile mdr_port_t *port, bit_depth_t port_out,  const port_out_config_t *config);
 
-unsigned int digital_read(volatile mdr_port_t *port, unsigned int port_out);
-void digital_write(volatile mdr_port_t *port, unsigned int port_out, unsigned int data);
+bit_depth_t digital_read(volatile mdr_port_t *port, bit_depth_t port_out);
+void digital_write(volatile mdr_port_t *port, bit_depth_t port_out, bit_depth_t data);
 
-unsigned int analog_read(unsigned int port_out);
-void analog_write(unsigned int data);
+bit_depth_t analog_read(bit_depth_t port_out);
+void analog_write(bit_depth_t data);

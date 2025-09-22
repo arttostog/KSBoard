@@ -1,29 +1,31 @@
 #pragma once
 
+typedef unsigned long bit_depth_t;
+
 /*
     Производственная информация
 */
 
-#define UNIQ_ID_1 (*((const volatile int*) 0x08000FF0))
-#define UNIQ_ID_2 (*((const volatile int*) 0x08000FE0))
-#define UNIQ_ID_3 (*((const volatile int*) 0x08000FD0))
-#define UNIQ_ID_4 (*((const volatile int*) 0x08000FC0))
-#define UNIQ_ID_5 (*((const volatile int*) 0x08000FB0))
+#define UNIQ_ID_1 (*((const volatile bit_depth_t*) 0x08000FF0))
+#define UNIQ_ID_2 (*((const volatile bit_depth_t*) 0x08000FE0))
+#define UNIQ_ID_3 (*((const volatile bit_depth_t*) 0x08000FD0))
+#define UNIQ_ID_4 (*((const volatile bit_depth_t*) 0x08000FC0))
+#define UNIQ_ID_5 (*((const volatile bit_depth_t*) 0x08000FB0))
 
-#define LDO_TRIM (*((const volatile int*) 0x08000FA0) & 7)
-#define HSI_TRIM (*((const volatile int*) 0x08000F90) & 63)
-#define LSI_TRIM (*((const volatile int*) 0x08000F80) & 31)
+#define LDO_TRIM (*((const volatile bit_depth_t*) 0x08000FA0) & 7)
+#define HSI_TRIM (*((const volatile bit_depth_t*) 0x08000F90) & 63)
+#define LSI_TRIM (*((const volatile bit_depth_t*) 0x08000F80) & 31)
 
 /*
     MDR_EEPROM
 */
 
 typedef struct {
-    volatile int cmd;
-    volatile int adr;
-    volatile int di;
-    volatile int data; // Обозначение в спецификации - "do"
-    volatile int key;
+    volatile bit_depth_t cmd;
+    volatile bit_depth_t adr;
+    volatile bit_depth_t di;
+    volatile bit_depth_t data; // Обозначение в спецификации - "do"
+    volatile bit_depth_t key;
 } mdr_eeprom_t;
 
 #define MDR_EEPROM ((volatile mdr_eeprom_t*) 0x40018000)
@@ -44,10 +46,10 @@ enum MDR_EEPROM_CMD {
 */
 
 typedef struct {
-    volatile int ctrl;
-    volatile int load;
-    volatile int val;
-    const volatile int calib;
+    volatile bit_depth_t ctrl;
+    volatile bit_depth_t load;
+    volatile bit_depth_t val;
+    const volatile bit_depth_t calib;
 } sys_tick_t;
 
 #define SYS_TICK ((volatile sys_tick_t*) 0xE000E010)
@@ -78,17 +80,17 @@ enum SYS_TICK_CALIB {
 */
 
 typedef struct {
-    const volatile int type;
-    volatile int ctrl;
-    volatile int rnr;
-    volatile int rbar;
-    volatile int rasr;
-    volatile int rbar_a1;
-    volatile int rasr_a1;
-    volatile int rbar_a2;
-    volatile int rasr_a2;
-    volatile int rbar_a3;
-    volatile int rasr_a3;
+    const volatile bit_depth_t type;
+    volatile bit_depth_t ctrl;
+    volatile bit_depth_t rnr;
+    volatile bit_depth_t rbar;
+    volatile bit_depth_t rasr;
+    volatile bit_depth_t rbar_a1;
+    volatile bit_depth_t rasr_a1;
+    volatile bit_depth_t rbar_a2;
+    volatile bit_depth_t rasr_a2;
+    volatile bit_depth_t rbar_a3;
+    volatile bit_depth_t rasr_a3;
 } mpu_t;
 
 #define MPU ((volatile mpu_t*) 0xE000ED90)
@@ -132,18 +134,18 @@ enum MPU_RASR {
 */
 
 typedef struct {
-    const volatile int clock_status;
-    volatile int pll_control;
-    volatile int hs_control;
-    volatile int cpu_clock;
-    volatile int usb_clock;
-    volatile int adc_mco_clock;
-    volatile int rtc_clock;
-    volatile int per_clock;
-    volatile int can_clock;
-    volatile int tim_clock;
-    volatile int uart_clock;
-    volatile int ssp_clock;
+    const volatile bit_depth_t clock_status;
+    volatile bit_depth_t pll_control;
+    volatile bit_depth_t hs_control;
+    volatile bit_depth_t cpu_clock;
+    volatile bit_depth_t usb_clock;
+    volatile bit_depth_t adc_mco_clock;
+    volatile bit_depth_t rtc_clock;
+    volatile bit_depth_t per_clock;
+    volatile bit_depth_t can_clock;
+    volatile bit_depth_t tim_clock;
+    volatile bit_depth_t uart_clock;
+    volatile bit_depth_t ssp_clock;
 } mdr_rst_clk_t;
 
 #define MDR_RST_CLK ((volatile mdr_rst_clk_t*) 0x40020000)
@@ -242,27 +244,27 @@ enum MDR_RST_CLK_SSP_CLOCK {
 */
 
 typedef struct {
-    volatile int reg_00;
-    volatile int reg_01;
-    volatile int reg_02;
-    volatile int reg_03;
-    volatile int reg_04;
-    volatile int reg_05;
-    volatile int reg_06;
-    volatile int reg_07;
-    volatile int reg_08;
-    volatile int reg_09;
-    volatile int reg_0a;
-    volatile int reg_0b;
-    volatile int reg_0c;
-    volatile int reg_0d;
-    volatile int reg_0e;
-    volatile int reg_0f;
-    volatile int rtc_cnt;
-    volatile int rtc_div;
-    volatile int rtc_prl;
-    volatile int rtc_alrm;
-    volatile int rtc_cs;
+    volatile bit_depth_t reg_00;
+    volatile bit_depth_t reg_01;
+    volatile bit_depth_t reg_02;
+    volatile bit_depth_t reg_03;
+    volatile bit_depth_t reg_04;
+    volatile bit_depth_t reg_05;
+    volatile bit_depth_t reg_06;
+    volatile bit_depth_t reg_07;
+    volatile bit_depth_t reg_08;
+    volatile bit_depth_t reg_09;
+    volatile bit_depth_t reg_0a;
+    volatile bit_depth_t reg_0b;
+    volatile bit_depth_t reg_0c;
+    volatile bit_depth_t reg_0d;
+    volatile bit_depth_t reg_0e;
+    volatile bit_depth_t reg_0f;
+    volatile bit_depth_t rtc_cnt;
+    volatile bit_depth_t rtc_div;
+    volatile bit_depth_t rtc_prl;
+    volatile bit_depth_t rtc_alrm;
+    volatile bit_depth_t rtc_cs;
 } mdr_bkp_t;
 
 #define MDR_BKP ((volatile mdr_bkp_t*) 0x400D8000)
@@ -317,14 +319,14 @@ enum MDR_BKP_RTC_CS {
 */
 
 typedef struct {
-    volatile int rxtx;
-    volatile int oe;
-    volatile int func;
-    volatile int analog;
-    volatile int pull;
-    volatile int pd;
-    volatile int pwr;
-    volatile int gfen;
+    volatile bit_depth_t rxtx;
+    volatile bit_depth_t oe;
+    volatile bit_depth_t func;
+    volatile bit_depth_t analog;
+    volatile bit_depth_t pull;
+    volatile bit_depth_t pd;
+    volatile bit_depth_t pwr;
+    volatile bit_depth_t gfen;
 } mdr_port_t;
 
 #define MDR_PORT_A ((volatile mdr_port_t*) 0x400A8000)
@@ -523,7 +525,7 @@ enum MDR_PORT_OUT_GFEN {
 */
 
 typedef struct {
-    volatile int pvdcs;
+    volatile bit_depth_t pvdcs;
 } mdr_power_t;
 
 #define MDR_POWER ((volatile mdr_power_t*) 0x40058000)
@@ -546,13 +548,13 @@ enum MDR_POWER_PVDCS {
 
 #pragma pack(push, 1)
 typedef struct {
-    char _[50];
-    volatile int nand_cycles;
-    volatile int control;
-    volatile int reg_0_cntrl;
-    volatile int reg_1_cntrl;
-    volatile int reg_2_cntrl;
-    volatile int reg_3_cntrl;
+    const char _padding_0[50];
+    volatile bit_depth_t nand_cycles;
+    volatile bit_depth_t control;
+    volatile bit_depth_t reg_0_cntrl;
+    volatile bit_depth_t reg_1_cntrl;
+    volatile bit_depth_t reg_2_cntrl;
+    volatile bit_depth_t reg_3_cntrl;
 } mdr_ebc_t;
 #pragma pack(pop)
 
@@ -600,99 +602,99 @@ enum MDR_EBC_REG_CNTRL {
 
 #pragma pack(push, 1)
 typedef struct {
-    volatile int htxc;
-    volatile int htxt;
-    volatile int htxlc;
-    volatile int htxse;
-    volatile int htxa;
-    volatile int htxe;
-    volatile int hfn_l;
-    volatile int hfn_h;
-    volatile int hsi;
-    volatile int him;
-    volatile int hrxs;
-    volatile int hrxp;
-    volatile int hrxa;
-    volatile int hrxe;
-    volatile int hrxcs;
-    volatile int hstm;
+    volatile bit_depth_t htxc;
+    volatile bit_depth_t htxt;
+    volatile bit_depth_t htxlc;
+    volatile bit_depth_t htxse;
+    volatile bit_depth_t htxa;
+    volatile bit_depth_t htxe;
+    volatile bit_depth_t hfn_l;
+    volatile bit_depth_t hfn_h;
+    volatile bit_depth_t hsi;
+    volatile bit_depth_t him;
+    volatile bit_depth_t hrxs;
+    volatile bit_depth_t hrxp;
+    volatile bit_depth_t hrxa;
+    volatile bit_depth_t hrxe;
+    volatile bit_depth_t hrxcs;
+    volatile bit_depth_t hstm;
     const char _padding_0[0x44];
-    volatile int hrxfd;
+    volatile bit_depth_t hrxfd;
     const char _padding_1[0x4];
-    volatile int hrxfdc;
+    volatile bit_depth_t hrxfdc;
     const char _padding_2[0x4];
-    volatile int hrxfc;
+    volatile bit_depth_t hrxfc;
     const char _padding_3[0x30];
-    volatile int htxfd;
+    volatile bit_depth_t htxfd;
     const char _padding_4[0x10];
-    volatile int htxfc;
+    volatile bit_depth_t htxfc;
     const char _padding_5[0x30];
-    volatile int sep_ctrl_0;
-    volatile int sep_sts_0;
-    volatile int sep_ts_0;
-    volatile int sep_nts_0;
-    volatile int sep_ctrl_1;
-    volatile int sep_sts_1;
-    volatile int sep_ts_1;
-    volatile int sep_nts_1;
-    volatile int sep_ctrl_2;
-    volatile int sep_sts_2;
-    volatile int sep_ts_2;
-    volatile int sep_nts_2;
-    volatile int sep_ctrl_3;
-    volatile int sep_sts_3;
-    volatile int sep_ts_3;
-    volatile int sep_nts_3;
-    volatile int sc;
-    volatile int sls;
-    volatile int sis;
-    volatile int sim;
-    volatile int sa;
-    volatile int sfn_l;
-    volatile int sfn_h;
+    volatile bit_depth_t sep_ctrl_0;
+    volatile bit_depth_t sep_sts_0;
+    volatile bit_depth_t sep_ts_0;
+    volatile bit_depth_t sep_nts_0;
+    volatile bit_depth_t sep_ctrl_1;
+    volatile bit_depth_t sep_sts_1;
+    volatile bit_depth_t sep_ts_1;
+    volatile bit_depth_t sep_nts_1;
+    volatile bit_depth_t sep_ctrl_2;
+    volatile bit_depth_t sep_sts_2;
+    volatile bit_depth_t sep_ts_2;
+    volatile bit_depth_t sep_nts_2;
+    volatile bit_depth_t sep_ctrl_3;
+    volatile bit_depth_t sep_sts_3;
+    volatile bit_depth_t sep_ts_3;
+    volatile bit_depth_t sep_nts_3;
+    volatile bit_depth_t sc;
+    volatile bit_depth_t sls;
+    volatile bit_depth_t sis;
+    volatile bit_depth_t sim;
+    volatile bit_depth_t sa;
+    volatile bit_depth_t sfn_l;
+    volatile bit_depth_t sfn_h;
     const char _padding_6[0x28];
-    volatile int sep_rxfd_0;
+    volatile bit_depth_t sep_rxfd_0;
     const char _padding_7[0x4];
-    volatile int sep_rxfdc_0;
+    volatile bit_depth_t sep_rxfdc_0;
     const char _padding_8[0x4];
-    volatile int sep_rxfc_0;
+    volatile bit_depth_t sep_rxfc_0;
     const char _padding_9[0x30];
-    volatile int sep_txfd_0;
+    volatile bit_depth_t sep_txfd_0;
     const char _padding_10[0x10];
-    volatile int sep_txfdc_0;
+    volatile bit_depth_t sep_txfdc_0;
     const char _padding_11[0x30];
-    volatile int sep_rxfd_1;
+    volatile bit_depth_t sep_rxfd_1;
     const char _padding_12[0x4];
-    volatile int sep_rxfdc_1;
+    volatile bit_depth_t sep_rxfdc_1;
     const char _padding_13[0x4];
-    volatile int sep_rxfc_1;
+    volatile bit_depth_t sep_rxfc_1;
     const char _padding_14[0x30];
-    volatile int sep_txfd_1;
+    volatile bit_depth_t sep_txfd_1;
     const char _padding_15[0x10];
-    volatile int sep_txfdc_1;
+    volatile bit_depth_t sep_txfdc_1;
     const char _padding_16[0x30];
-    volatile int sep_rxfd_2;
+    volatile bit_depth_t sep_rxfd_2;
     const char _padding_17[0x4];
-    volatile int sep_rxfdc_2;
+    volatile bit_depth_t sep_rxfdc_2;
     const char _padding_18[0x4];
-    volatile int sep_rxfc_2;
+    volatile bit_depth_t sep_rxfc_2;
     const char _padding_19[0x30];
-    volatile int sep_txfd_2;
+    volatile bit_depth_t sep_txfd_2;
     const char _padding_20[0x10];
-    volatile int sep_txfdc_2;
+    volatile bit_depth_t sep_txfdc_2;
     const char _padding_21[0x30];
-    volatile int sep_rxfd_3;
+    volatile bit_depth_t sep_rxfd_3;
     const char _padding_22[0x4];
-    volatile int sep_rxfdc_3;
+    volatile bit_depth_t sep_rxfdc_3;
     const char _padding_23[0x4];
-    volatile int sep_rxfc_3;
+    volatile bit_depth_t sep_rxfc_3;
     const char _padding_24[0x30];
-    volatile int sep_txfd_3;
+    volatile bit_depth_t sep_txfd_3;
     const char _padding_25[0x10];
-    volatile int sep_txfdc_3;
+    volatile bit_depth_t sep_txfdc_3;
     const char _padding_26[0x30];
-    volatile int hscr;
-    volatile int hsvr;
+    volatile bit_depth_t hscr;
+    volatile bit_depth_t hsvr;
 } mdr_usb_t;
 #pragma pack(pop)
 
@@ -897,39 +899,39 @@ enum MDR_USB_SEP_TXFDC {
 */
 
 typedef struct {
-    volatile int id;
-    volatile int dlc;
-    volatile int datal;
-    volatile int datah;
+    volatile bit_depth_t id;
+    volatile bit_depth_t dlc;
+    volatile bit_depth_t datal;
+    volatile bit_depth_t datah;
 } can_buf_t;
 
 typedef struct {
-    volatile int mask;
-    volatile int filter;
+    volatile bit_depth_t mask;
+    volatile bit_depth_t filter;
 } can_buf_filter_t;
 
 #pragma pack(push, 1)
 typedef struct {
-    volatile int control;
-    volatile int status;
-    volatile int bittmng;
-    volatile int int_en;
+    volatile bit_depth_t control;
+    volatile bit_depth_t status;
+    volatile bit_depth_t bittmng;
+    volatile bit_depth_t int_en;
     const char _padding_0[0x8];
-    volatile int over;
+    volatile bit_depth_t over;
     const char _padding_1[0x4];
-    volatile int rxid;
-    volatile int rxdlc;
-    volatile int rxdatal;
-    volatile int rxdatah;
-    volatile int txid;
-    volatile int txdlc;
-    volatile int datal;
-    volatile int datah;
-    volatile int buf_con[0x20];
-    volatile int int_rx;
-    volatile int rx;
-    volatile int int_tx;
-    volatile int tx;
+    volatile bit_depth_t rxid;
+    volatile bit_depth_t rxdlc;
+    volatile bit_depth_t rxdatal;
+    volatile bit_depth_t rxdatah;
+    volatile bit_depth_t txid;
+    volatile bit_depth_t txdlc;
+    volatile bit_depth_t datal;
+    volatile bit_depth_t datah;
+    volatile bit_depth_t buf_con[0x20];
+    volatile bit_depth_t int_rx;
+    volatile bit_depth_t rx;
+    volatile bit_depth_t int_tx;
+    volatile bit_depth_t tx;
     const char _padding_2[0x130];
     volatile can_buf_t can_buf[0x20];
     const char _padding_3[0x100];
@@ -1097,38 +1099,38 @@ enum MDR_CAN_CAN_BUF_DATAH {
 
 #pragma pack(push, 1)
 typedef struct {
-    volatile int cnt;
-    volatile int psg;
-    volatile int arr;
-    volatile int cntrl;
-    volatile int ccr1;
-    volatile int ccr2;
-    volatile int ccr3;
-    volatile int ccr4;
-    volatile int ch1_cntrl;
-    volatile int ch2_cntrl;
-    volatile int ch3_cntrl;
-    volatile int ch4_cntrl;
-    volatile int ch1_cntrl1;
-    volatile int ch2_cntrl1;
-    volatile int ch3_cntrl1;
-    volatile int ch4_cntrl1;
-    volatile int ch1_dtg;
-    volatile int ch2_dtg;
-    volatile int ch3_dtg;
-    volatile int ch4_dtg;
-    volatile int brketr_cntrl;
-    volatile int status;
-    volatile int ie;
-    volatile int dma_re;
-    volatile int ch1_cntrl2;
-    volatile int ch2_cntrl2;
-    volatile int ch3_cntrl2;
-    volatile int ch4_cntrl2;
-    volatile int ccr11;
-    volatile int ccr21;
-    volatile int ccr31;
-    volatile int ccr41;
+    volatile bit_depth_t cnt;
+    volatile bit_depth_t psg;
+    volatile bit_depth_t arr;
+    volatile bit_depth_t cntrl;
+    volatile bit_depth_t ccr1;
+    volatile bit_depth_t ccr2;
+    volatile bit_depth_t ccr3;
+    volatile bit_depth_t ccr4;
+    volatile bit_depth_t ch1_cntrl;
+    volatile bit_depth_t ch2_cntrl;
+    volatile bit_depth_t ch3_cntrl;
+    volatile bit_depth_t ch4_cntrl;
+    volatile bit_depth_t ch1_cntrl1;
+    volatile bit_depth_t ch2_cntrl1;
+    volatile bit_depth_t ch3_cntrl1;
+    volatile bit_depth_t ch4_cntrl1;
+    volatile bit_depth_t ch1_dtg;
+    volatile bit_depth_t ch2_dtg;
+    volatile bit_depth_t ch3_dtg;
+    volatile bit_depth_t ch4_dtg;
+    volatile bit_depth_t brketr_cntrl;
+    volatile bit_depth_t status;
+    volatile bit_depth_t ie;
+    volatile bit_depth_t dma_re;
+    volatile bit_depth_t ch1_cntrl2;
+    volatile bit_depth_t ch2_cntrl2;
+    volatile bit_depth_t ch3_cntrl2;
+    volatile bit_depth_t ch4_cntrl2;
+    volatile bit_depth_t ccr11;
+    volatile bit_depth_t ccr21;
+    volatile bit_depth_t ccr31;
+    volatile bit_depth_t ccr41;
 } mdr_timer_t;
 #pragma pack(pop)
 
@@ -1246,18 +1248,18 @@ enum MDR_TIMER_DMA_RE {
 */
 
 typedef struct {
-    volatile int adc1_cfg;
-    volatile int adc2_cfg;
-    volatile int adc1_h_level;
-    volatile int adc2_h_level;
-    volatile int adc1_l_level;
-    volatile int adc2_l_level;
-    const volatile int adc1_result;
-    const volatile int adc2_result;
-    volatile int adc1_status;
-    volatile int adc2_status;
-    volatile int adc1_chsel;
-    volatile int adc2_chsel;
+    volatile bit_depth_t adc1_cfg;
+    volatile bit_depth_t adc2_cfg;
+    volatile bit_depth_t adc1_h_level;
+    volatile bit_depth_t adc2_h_level;
+    volatile bit_depth_t adc1_l_level;
+    volatile bit_depth_t adc2_l_level;
+    const volatile bit_depth_t adc1_result;
+    const volatile bit_depth_t adc2_result;
+    volatile bit_depth_t adc1_status;
+    volatile bit_depth_t adc2_status;
+    volatile bit_depth_t adc1_chsel;
+    volatile bit_depth_t adc2_chsel;
 } mdr_adc_t;
 
 #define MDR_ADC ((volatile mdr_adc_t*) 0x40088000)
@@ -1323,9 +1325,9 @@ enum MDR_ADC_ADC_STATUS {
 */
 
 typedef struct {
-    volatile int cfg;
-    volatile int dac1_data;
-    volatile int dac2_data;
+    volatile bit_depth_t cfg;
+    volatile bit_depth_t dac1_data;
+    volatile bit_depth_t dac2_data;
 } mdr_dac_t;
 
 #define MDR_DAC ((volatile mdr_dac_t*) 0x40090000)
@@ -1353,9 +1355,9 @@ enum MDR_DAC2_DATA {
 */
 
 typedef struct {
-    volatile int cfg;
-    volatile int result;
-    volatile int result_latch;
+    volatile bit_depth_t cfg;
+    volatile bit_depth_t result;
+    volatile bit_depth_t result_latch;
 } mdr_comp_t;
 
 #define MDR_COMP ((volatile mdr_comp_t*) 0x40098000)
@@ -1388,13 +1390,13 @@ enum MDR_COMP_RESULT_LATCH {
 */
 
 typedef struct {
-    volatile int prl;
-    volatile int prh;
-    volatile int ctr;
-    const volatile int rxd;
-    const volatile int sta;
-    volatile int txd;
-    volatile int cmd;
+    volatile bit_depth_t prl;
+    volatile bit_depth_t prh;
+    volatile bit_depth_t ctr;
+    const volatile bit_depth_t rxd;
+    const volatile bit_depth_t sta;
+    volatile bit_depth_t txd;
+    volatile bit_depth_t cmd;
 } mdr_i2c_t;
 
 #define MDR_I2C ((volatile mdr_i2c_t*) 0x40050000)
@@ -1443,16 +1445,16 @@ enum MDR_I2C_CMD {
 */
 
 typedef struct {
-    volatile int cr0;
-    volatile int cr1;
-    volatile int dr;
-    const volatile int sr;
-    volatile int cpsr;
-    volatile int imsc;
-    const volatile int ris;
-    const volatile int mis;
-    volatile int icr;
-    volatile int dmacr;
+    volatile bit_depth_t cr0;
+    volatile bit_depth_t cr1;
+    volatile bit_depth_t dr;
+    const volatile bit_depth_t sr;
+    volatile bit_depth_t cpsr;
+    volatile bit_depth_t imsc;
+    const volatile bit_depth_t ris;
+    const volatile bit_depth_t mis;
+    volatile bit_depth_t icr;
+    volatile bit_depth_t dmacr;
 } mdr_ssp_t;
 
 #define MDR_SSP1 ((volatile mdr_ssp_t*) 0x40040000)
@@ -1526,22 +1528,22 @@ enum MDR_SSP_DMACR {
 
 #pragma pack(push, 1)
 typedef struct {
-    volatile int dr;
-    volatile int rsr_ecr;
+    volatile bit_depth_t dr;
+    volatile bit_depth_t rsr_ecr;
     const char _padding_0[0x10];
-    const volatile int fr;
+    const volatile bit_depth_t fr;
     const char _padding_1[0x4];
-    volatile int ilpr;
-    volatile int ibrd;
-    volatile int fbrd;
-    volatile int lcr_h;
-    volatile int cr;
-    volatile int ifls;
-    volatile int imsc;
-    const volatile int ris;
-    const volatile int mis;
-    volatile int icr;
-    volatile int dmacr;
+    volatile bit_depth_t ilpr;
+    volatile bit_depth_t ibrd;
+    volatile bit_depth_t fbrd;
+    volatile bit_depth_t lcr_h;
+    volatile bit_depth_t cr;
+    volatile bit_depth_t ifls;
+    volatile bit_depth_t imsc;
+    const volatile bit_depth_t ris;
+    const volatile bit_depth_t mis;
+    volatile bit_depth_t icr;
+    volatile bit_depth_t dmacr;
 } mdr_uart_t;
 #pragma pack(pop)
 
@@ -1685,24 +1687,24 @@ enum MDR_UART_DMACR {
 
 #pragma pack(push, 1)
 typedef struct {
-    const volatile int status;
-    volatile int cfg;
-    volatile int ctrl_base_ptr;
-    const volatile int alt_ctrl_base_ptr;
-    const volatile int waitonreq_status;
-    volatile int chnl_sw_request;
-    volatile int chnl_useburst_set;
-    volatile int chnl_useburst_clr;
-    volatile int chnl_req_mask_set;
-    volatile int chnl_req_mask_clr;
-    volatile int chnl_enable_set;
-    volatile int chnl_enable_clr;
-    volatile int chnl_pri_alt_set;
-    volatile int chnl_pri_alt_clr;
-    volatile int chnl_priority_set;
-    volatile int chnl_priority_clr;
+    const volatile bit_depth_t status;
+    volatile bit_depth_t cfg;
+    volatile bit_depth_t ctrl_base_ptr;
+    const volatile bit_depth_t alt_ctrl_base_ptr;
+    const volatile bit_depth_t waitonreq_status;
+    volatile bit_depth_t chnl_sw_request;
+    volatile bit_depth_t chnl_useburst_set;
+    volatile bit_depth_t chnl_useburst_clr;
+    volatile bit_depth_t chnl_req_mask_set;
+    volatile bit_depth_t chnl_req_mask_clr;
+    volatile bit_depth_t chnl_enable_set;
+    volatile bit_depth_t chnl_enable_clr;
+    volatile bit_depth_t chnl_pri_alt_set;
+    volatile bit_depth_t chnl_pri_alt_clr;
+    volatile bit_depth_t chnl_priority_set;
+    volatile bit_depth_t chnl_priority_clr;
     const char _padding_0[0xC];
-    volatile int err_clr;
+    volatile bit_depth_t err_clr;
 } mdr_dma_t;
 #pragma pack(pop)
 
@@ -2154,59 +2156,59 @@ enum MDR_DMA_ERR_CLR {
 
 #pragma pack(push, 1)
 typedef struct {
-    volatile int iser_0;
-    volatile int iser_1;
-    volatile int iser_2;
-    volatile int iser_3;
-    volatile int iser_4;
-    volatile int iser_5;
-    volatile int iser_6;
-    volatile int iser_7;
+    volatile bit_depth_t iser_0;
+    volatile bit_depth_t iser_1;
+    volatile bit_depth_t iser_2;
+    volatile bit_depth_t iser_3;
+    volatile bit_depth_t iser_4;
+    volatile bit_depth_t iser_5;
+    volatile bit_depth_t iser_6;
+    volatile bit_depth_t iser_7;
     const char _padding_0[0x60];
-    volatile int icer_0;
-    volatile int icer_1;
-    volatile int icer_2;
-    volatile int icer_3;
-    volatile int icer_4;
-    volatile int icer_5;
-    volatile int icer_6;
-    volatile int icer_7;
-    volatile int ispr_0;
-    volatile int ispr_1;
-    volatile int ispr_2;
-    volatile int ispr_3;
-    volatile int ispr_4;
-    volatile int ispr_5;
-    volatile int ispr_6;
-    volatile int ispr_7;
+    volatile bit_depth_t icer_0;
+    volatile bit_depth_t icer_1;
+    volatile bit_depth_t icer_2;
+    volatile bit_depth_t icer_3;
+    volatile bit_depth_t icer_4;
+    volatile bit_depth_t icer_5;
+    volatile bit_depth_t icer_6;
+    volatile bit_depth_t icer_7;
+    volatile bit_depth_t ispr_0;
+    volatile bit_depth_t ispr_1;
+    volatile bit_depth_t ispr_2;
+    volatile bit_depth_t ispr_3;
+    volatile bit_depth_t ispr_4;
+    volatile bit_depth_t ispr_5;
+    volatile bit_depth_t ispr_6;
+    volatile bit_depth_t ispr_7;
     const char _padding_1[0x60];
-    volatile int icpr_0;
-    volatile int icpr_1;
-    volatile int icpr_2;
-    volatile int icpr_3;
-    volatile int icpr_4;
-    volatile int icpr_5;
-    volatile int icpr_6;
-    volatile int icpr_7;
-    const volatile int iabr_0;
-    const volatile int iabr_1;
-    const volatile int iabr_2;
-    const volatile int iabr_3;
-    const volatile int iabr_4;
-    const volatile int iabr_5;
-    const volatile int iabr_6;
-    const volatile int iabr_7;
+    volatile bit_depth_t icpr_0;
+    volatile bit_depth_t icpr_1;
+    volatile bit_depth_t icpr_2;
+    volatile bit_depth_t icpr_3;
+    volatile bit_depth_t icpr_4;
+    volatile bit_depth_t icpr_5;
+    volatile bit_depth_t icpr_6;
+    volatile bit_depth_t icpr_7;
+    const volatile bit_depth_t iabr_0;
+    const volatile bit_depth_t iabr_1;
+    const volatile bit_depth_t iabr_2;
+    const volatile bit_depth_t iabr_3;
+    const volatile bit_depth_t iabr_4;
+    const volatile bit_depth_t iabr_5;
+    const volatile bit_depth_t iabr_6;
+    const volatile bit_depth_t iabr_7;
     const char _padding_2[0xE0];
-    volatile int ipr_0;
-    volatile int ipr_1;
-    volatile int ipr_2;
-    volatile int ipr_3;
-    volatile int ipr_4;
-    volatile int ipr_5;
-    volatile int ipr_6;
-    volatile int ipr_7;
+    volatile bit_depth_t ipr_0;
+    volatile bit_depth_t ipr_1;
+    volatile bit_depth_t ipr_2;
+    volatile bit_depth_t ipr_3;
+    volatile bit_depth_t ipr_4;
+    volatile bit_depth_t ipr_5;
+    volatile bit_depth_t ipr_6;
+    volatile bit_depth_t ipr_7;
     const char _padding_3[0xAE0];
-    volatile int stir;
+    volatile bit_depth_t stir;
 } nvic_t;
 #pragma pack(pop)
 
@@ -2230,11 +2232,11 @@ enum NVIC_STIR {
 #pragma pack(push, 1)
 typedef struct {
     const char _padding_0[0x8];
-    volatile int actlr;
+    volatile bit_depth_t actlr;
 } interrupt_t;
 #pragma pack(push)
 
-#define INTERRUPT_TYPE ((volatile interrupt_t*) 0xE000E000)
+#define INTERRUPT_TYPE ((volatile bit_depth_terrupt_t*) 0xE000E000)
 
 enum INTERRUPT_TYPE_ACTLR {
     INTERRUPT_TYPE_ACTLR_DISMCYCINT = 1,
@@ -2244,23 +2246,23 @@ enum INTERRUPT_TYPE_ACTLR {
 
 #pragma pack(push, 1)
 typedef struct {
-    const volatile int cpuid;
-    volatile int icsr;
-    volatile int vtor;
-    volatile int aircr;
-    volatile int scr;
-    volatile int ccr;
-    volatile int shpr1;
-    volatile int shpr2;
-    volatile int shpr3;
-    volatile int shcrs;
-    const volatile int cfsr;
-    const volatile int mmsr;
-    const volatile int bfsr;
-    const volatile int ufsr;
-    volatile int hfsr;
-    const volatile int mmar;
-    const volatile int bfar;
+    const volatile bit_depth_t cpuid;
+    volatile bit_depth_t icsr;
+    volatile bit_depth_t vtor;
+    volatile bit_depth_t aircr;
+    volatile bit_depth_t scr;
+    volatile bit_depth_t ccr;
+    volatile bit_depth_t shpr1;
+    volatile bit_depth_t shpr2;
+    volatile bit_depth_t shpr3;
+    volatile bit_depth_t shcrs;
+    const volatile bit_depth_t cfsr;
+    const volatile bit_depth_t mmsr;
+    const volatile bit_depth_t bfsr;
+    const volatile bit_depth_t ufsr;
+    volatile bit_depth_t hfsr;
+    const volatile bit_depth_t mmar;
+    const volatile bit_depth_t bfar;
 } scb_t;
 #pragma pack(push)
 
@@ -2383,10 +2385,10 @@ enum SCB_HFSR {
 */
 
 typedef struct {
-    volatile int kr;
-    volatile int pr;
-    volatile int rlr;
-    const volatile int sr;
+    volatile bit_depth_t kr;
+    volatile bit_depth_t pr;
+    volatile bit_depth_t rlr;
+    const volatile bit_depth_t sr;
 } mdr_iwdg_t;
 
 #define MDR_IWDG ((volatile mdr_iwdg_t*) 0x40068000)
@@ -2413,9 +2415,9 @@ enum MDR_IWDG_SR {
 */
 
 typedef struct {
-    volatile int cr;
-    volatile int cfr;
-    volatile int sr;
+    volatile bit_depth_t cr;
+    volatile bit_depth_t cfr;
+    volatile bit_depth_t sr;
 } mdr_wwdg_t;
 
 #define MDR_WWDG ((volatile mdr_wwdg_t*) 0x40060000)
