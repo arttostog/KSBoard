@@ -1,17 +1,5 @@
 #include <ksboard.h>
 
-void delay(bit_depth_t milliseconds) {
-    SYS_TICK->load = LSI_FREQUENCY - 1;
-    SYS_TICK->val = 0;
-    SYS_TICK->ctrl = SYS_TICK_CTRL_ENABLE;
-    
-    while (milliseconds)
-        if (SYS_TICK->ctrl & SYS_TICK_CTRL_COUNTFLAG)
-            --milliseconds;
-    
-    SYS_TICK->ctrl = 0;
-}
-
 void port_out_config(volatile mdr_port_t *port, bit_depth_t port_out, const port_out_config_t *config) {
     port_out &= 15;
 
