@@ -6,7 +6,7 @@ GCC_SOURCES = ./system/ksb_boot.s ./system/ksb_base.c ./system/ksb_board_loader.
 GCC_ARGS = -Wall -mthumb -Wextra -ffreestanding -O2 -nostartfiles -static -I./include -I./src/include \
 	-mcpu=cortex-m3 -T link.ld -DSELECTED_BOARD=0xA1
 
-GCC_SOURCES_PROGRAM = $(wildcard ./program/*.c ./program/*.s ./program/)
+GCC_SOURCES_PROGRAM = $(wildcard ./program/*.c ./program/*.s ./program/*.cpp)
 
 OBJCOPY = arm-none-eabi-objcopy
 OBJCOPY_ARGS = -O binary
