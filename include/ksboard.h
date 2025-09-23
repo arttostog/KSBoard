@@ -6,6 +6,7 @@ void board_start();
 void board_loop();
 
 void delay(bit_depth_t milliseconds);
+void delay_microseconds(bit_depth_t microseconds);
 
 typedef struct {
     bit_depth_t is_output;

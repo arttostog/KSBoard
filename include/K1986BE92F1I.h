@@ -150,10 +150,10 @@ typedef struct {
 
 #define MDR_RST_CLK ((volatile mdr_rst_clk_t*) 0x40020000)
 
-#define HSI_FREQUENCY 8000
-#define LSI_FREQUENCY 40
+#define HSI_FREQUENCY 8000000
+#define LSI_FREQUENCY 40000
 
-#define LSE_FREQUENCY 32
+#define LSE_FREQUENCY 32000
 
 enum MDR_RST_CLK_CLOCK_STATUS {
     MDR_RST_CLK_CLOCK_STATUS_PLLUSBRDY = 1,

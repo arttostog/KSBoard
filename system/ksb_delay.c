@@ -1,13 +1,22 @@
 #include <ksboard.h>
 
-void delay(bit_depth_t milliseconds) {
-    SYS_TICK->load = LSI_FREQUENCY - 1;
+static void sys_tick_delay(bit_depth_t counter, bit_depth_t frequency_divider) {
+    // Высчитывается исходя из HCLK, который настроен на источник HSI
+    SYS_TICK->load = (HSI_FREQUENCY / frequency_divider) - 1;
     SYS_TICK->val = 0;
-    SYS_TICK->ctrl = SYS_TICK_CTRL_ENABLE;
-    
-    while (milliseconds)
+    SYS_TICK->ctrl = SYS_TICK_CTRL_ENABLE | SYS_TICK_CTRL_CLKSOURCE;
+
+    while (counter)
         if (SYS_TICK->ctrl & SYS_TICK_CTRL_COUNTFLAG)
-            --milliseconds;
+            --counter;
     
     SYS_TICK->ctrl = 0;
+}
+
+void delay(bit_depth_t milliseconds) {
+    sys_tick_delay(milliseconds, 1000);
+}
+
+void delay_microseconds(bit_depth_t microseconds) {
+    sys_tick_delay(microseconds, 1000 * 1000);
 }
