@@ -28,7 +28,7 @@ void digital_write(volatile mdr_port_t *port, bit_depth_t port_out, bit_depth_t 
 bit_depth_t analog_read(bit_depth_t port_out) {
     MDR_ADC->adc2_cfg = 1 | (port_out & 31) << 4;
     MDR_ADC->adc2_cfg |= 1 << 1; // Если не разделять, то настройки не применятся
-    delay(1); // TODO: Надо бы высчитать общее время преобразования
+    delay_microseconds(250); // TODO: Надо бы высчитать общее время преобразования
     bit_depth_t read_result = MDR_ADC->adc2_result;
     MDR_ADC->adc2_cfg = 0;
     return read_result;
