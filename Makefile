@@ -6,10 +6,16 @@ GCC_SOURCES = ./system/ksb_boot.s ./system/ksb_base.c ./system/ksb_board_loader.
 GCC_ARGS = -Wall -mthumb -Wextra -ffreestanding -O2 -nostartfiles -static -I./include -I./src/include \
 	-mcpu=cortex-m3 -T link.ld -DSELECTED_BOARD=0xA1
 
-GCC_SOURCES_PROGRAM = $(wildcard ./program/*.c)
+GCC_SOURCES_PROGRAM = $(wildcard ./program/*.c ./program/*.s ./program/)
 
 OBJCOPY = arm-none-eabi-objcopy
 OBJCOPY_ARGS = -O binary
+
+ifeq ($(OS), Windows_NT)
+	CLEAN_COMMAND = del
+else
+	CLEAN_COMMAND = rm
+endif
 
 build :
 	$(GCC) $(GCC_ARGS) $(GCC_SOURCES) $(GCC_SOURCES_PROGRAM) -o $(OUTPUT)
@@ -18,7 +24,7 @@ bin:
 	$(OBJCOPY) $(OBJCOPY_ARGS) $(OUTPUT) $(OUTPUT).bin
 
 clean :
-	del $(OUTPUT) $(OUTPUT).bin
+	$(CLEAN_COMMAND) $(OUTPUT) $(OUTPUT).bin
 
 error:
 	@echo Usage: make [target]
