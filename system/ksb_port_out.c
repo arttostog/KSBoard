@@ -1,17 +1,5 @@
 #include <ksboard.h>
 
-void delay(bit_depth_t milliseconds) {
-    SYS_TICK->load = LSI_FREQUENCY - 1;
-    SYS_TICK->val = 0;
-    SYS_TICK->ctrl = SYS_TICK_CTRL_ENABLE;
-    
-    while (milliseconds)
-        if (SYS_TICK->ctrl & SYS_TICK_CTRL_COUNTFLAG)
-            --milliseconds;
-    
-    SYS_TICK->ctrl = 0;
-}
-
 void port_out_config(volatile mdr_port_t *port, bit_depth_t port_out, const port_out_config_t *config) {
     port_out &= 15;
 
@@ -40,7 +28,7 @@ void digital_write(volatile mdr_port_t *port, bit_depth_t port_out, bit_depth_t 
 bit_depth_t analog_read(bit_depth_t port_out) {
     MDR_ADC->adc2_cfg = 1 | (port_out & 31) << 4;
     MDR_ADC->adc2_cfg |= 1 << 1; // Если не разделять, то настройки не применятся
-    delay(1); // TODO: Надо бы высчитать общее время преобразования
+    delay_microseconds(250); // TODO: Надо бы высчитать общее время преобразования
     bit_depth_t read_result = MDR_ADC->adc2_result;
     MDR_ADC->adc2_cfg = 0;
     return read_result;
