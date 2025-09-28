@@ -5,9 +5,6 @@
 void board_start();
 void board_loop();
 
-void delay(bit_depth_t milliseconds);
-void delay_microseconds(bit_depth_t microseconds);
-
 typedef struct {
     bit_depth_t is_output;
     bit_depth_t function;
@@ -20,22 +17,6 @@ typedef struct {
     bit_depth_t use_filter;
 } port_out_config_t;
 
-void port_out_config(volatile mdr_port_t *port, bit_depth_t port_out,  const port_out_config_t *config);
-
-bit_depth_t digital_read(volatile mdr_port_t *port, bit_depth_t port_out);
-void digital_write(volatile mdr_port_t *port, bit_depth_t port_out, bit_depth_t data);
-
-bit_depth_t analog_read(bit_depth_t port_out);
-void analog_write(bit_depth_t data);
-
-void uart_start(bit_depth_t baud_rate);
-void uart_stop();
-
-bit_depth_t uart_busy();
-
-void uart_write(char byte_to_write);
-
-bit_depth_t uart_read();
-
-void uart_print(const char *text);
-void uart_println(const char *text);
+#include "../system/ksb_delay.h"
+#include "../system/ksb_port_out.h"
+#include "../system/ksb_uart.h"
