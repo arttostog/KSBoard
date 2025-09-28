@@ -27,3 +27,16 @@ void digital_write(volatile mdr_port_t *port, bit_depth_t port_out, bit_depth_t 
 
 bit_depth_t analog_read(bit_depth_t port_out);
 void analog_write(bit_depth_t data);
+
+void uart_start();
+void uart_stop();
+
+bit_depth_t uart_available();
+
+void uart_write(char byte_to_write);
+
+bit_depth_t uart_read();
+bit_depth_t uart_peek();
+
+void uart_print(const char *text);
+void uart_println(const char *text);
