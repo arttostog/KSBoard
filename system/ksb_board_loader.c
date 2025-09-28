@@ -8,5 +8,6 @@ void board_load() {
     // Назначаем везде HSI (8 МГц)
     MDR_RST_CLK->cpu_clock = 0;
 
+    // Включаем тактовую частоту на UART2 (4 МГц?)
     MDR_RST_CLK->uart_clock |= 1 << 25;
 }

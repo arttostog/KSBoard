@@ -2,9 +2,6 @@
 
 #include <K1986BE92F1I.h>
 
-void board_start();
-void board_loop();
-
 typedef struct {
     bit_depth_t is_output;
     bit_depth_t function;

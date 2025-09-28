@@ -5,7 +5,7 @@
 static inline void uart_start(bit_depth_t baud_rate) {
     MDR_UART2->lcr_h |= 1 << 4 || 3 << 5;
 
-    float baud_rate_calculated = 4000000.0f / (16 * baud_rate);
+    float baud_rate_calculated = 4000000.0f / (16 * baud_rate); // При UARTCLK == 4 МГц
     bit_depth_t baud_rate_calculated_integer = (bit_depth_t) baud_rate_calculated;
 
     MDR_UART2->ibrd = baud_rate_calculated_integer & 65535;
