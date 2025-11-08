@@ -36,7 +36,7 @@ void uart_print(const char *text) {
         uart_write(text[i]);
 }
 
-inline void uart_println(const char *text) {
+void uart_println(const char *text) {
     uart_print(text);
     uart_write('\n');
 }
