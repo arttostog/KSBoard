@@ -5,53 +5,53 @@
 .section .isr_vector
 vectors:
     .word _stack_top
-    .word entry        // RESET
-    .word base_handler // NMI
-    .word base_handler // Hard Fault
-    .word base_handler // Memory Management Fault
-    .word base_handler // Bus Fault
-    .word base_handler // Usage Fault
+    .word reset_handler // RESET
+    .word base_handler  // NMI
+    .word base_handler  // Hard Fault
+    .word base_handler  // Memory Management Fault
+    .word base_handler  // Bus Fault
+    .word base_handler  // Usage Fault
     .word 0
     .word 0
     .word 0
     .word 0
-    .word base_handler // SVCall
+    .word base_handler  // SVCall
     .word 0
     .word 0
-    .word base_handler // PendSV
-    .word base_handler // SysTick
-    .word base_handler // CAN1
-    .word base_handler // CAN2
-    .word base_handler // USB
+    .word base_handler  // PendSV
+    .word base_handler  // SysTick
+    .word base_handler  // CAN1
+    .word base_handler  // CAN2
+    .word base_handler  // USB
     .word 0
     .word 0
-    .word base_handler // DMA
-    .word base_handler // UART1
-    .word base_handler // UART2
-    .word base_handler // SSP1
+    .word base_handler  // DMA
+    .word base_handler  // UART1
+    .word base_handler  // UART2
+    .word base_handler  // SSP1
     .word 0
-    .word base_handler // I2C
-    .word base_handler // POWER
-    .word base_handler // WWDG
+    .word base_handler  // I2C
+    .word base_handler  // POWER
+    .word base_handler  // WWDG
     .word 0
-    .word base_handler // Timer 1
-    .word base_handler // Timer 2
-    .word base_handler // Timer 3
-    .word base_handler // ADC
+    .word base_handler  // Timer 1
+    .word base_handler  // Timer 2
+    .word base_handler  // Timer 3
+    .word base_handler  // ADC
     .word 0
-    .word base_handler // COMP
-    .word base_handler // SSP2
-    .word 0
-    .word 0
-    .word 0
+    .word base_handler  // COMP
+    .word base_handler  // SSP2
     .word 0
     .word 0
     .word 0
-    .word base_handler // BACKUP
-    .word base_handler // EXT_INT1
-    .word base_handler // EXT_INT2
-    .word base_handler // EXT_INT3
-    .word base_handler // EXT_INT4
+    .word 0
+    .word 0
+    .word 0
+    .word base_handler  // BACKUP
+    .word base_handler  // EXT_INT1
+    .word base_handler  // EXT_INT2
+    .word base_handler  // EXT_INT3
+    .word base_handler  // EXT_INT4
 
 .section .boot, "ax"
 
@@ -59,7 +59,9 @@ vectors:
 .extern board_start
 .extern board_loop
 
-entry:
+.global reset_handler
+
+reset_handler:
     bl bss_clear
     bl data_copy
 
