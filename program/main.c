@@ -1,4 +1,5 @@
 #include <ksboard.h>
+#include <fled/fled.h>
 
 const char *text = "HELLO :)";
 
@@ -12,20 +13,8 @@ void board_start() {
     uart_write(readed_byte);
     uart_stop();
     
-    port_out_config_t port_config = {
-        1,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        1,
-        0
-    };
-
-    port_out_config(D2, &port_config);
-    digital_write(D2, 1);
+    fled_init(D2);
+    fled_on(D2);
 }
 
 void board_loop() {}
