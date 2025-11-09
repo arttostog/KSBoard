@@ -2,10 +2,10 @@ from sys import argv, exit
 from serial import Serial, PARITY_NONE, STOPBITS_ONE, EIGHTBITS
 
 class LoadTool:
-    def start(port: str, file: str) -> None:
-        bytes_to_write: bytes = LoadTool.read_file()
-
+    def start(port: str, path_to_file: str) -> None:
         try:
+            bytes_to_write: bytes = LoadTool.read_file(path_to_file)
+
             device: Serial = Serial(
                 port=port,
                 baudrate=9600,
@@ -28,8 +28,8 @@ class LoadTool:
             print(f"Возникло исключение: {exception}")
 
     
-    def read_file(file: str) -> bytes:
-        with open(file, "rb") as file:
+    def read_file(path_to_file: str) -> bytes:
+        with open(path_to_file, "rb") as file:
             return file.read()
 
     def format_value(value: int) -> bytes:
@@ -37,6 +37,6 @@ class LoadTool:
 
 if __name__ == "__main__":
     if len(argv) != 3:
-        print("Too few or many args!")
+        print("Слишком мало или слишком много аргументов!")
         exit(1)
     LoadTool.start(argv[1], argv[2])

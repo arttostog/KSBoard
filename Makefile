@@ -14,19 +14,25 @@ GCC_LIBRARY_PROGRAM = $(call RWILDCARD,library,*.s *.c)
 OBJCOPY = arm-none-eabi-objcopy
 OBJCOPY_ARGS = -O binary
 
+PYTHON = python
+LOAD_TOOL = load_tool.py
+
 ifeq ($(OS), Windows_NT)
 	CLEAN_COMMAND = del
 else
 	CLEAN_COMMAND = rm
 endif
 
-build :
+build:
 	$(GCC) $(GCC_ARGS) $(GCC_SOURCES) $(GCC_SOURCES_PROGRAM) $(GCC_LIBRARY_PROGRAM) -o $(OUTPUT)
-
-bin:
 	$(OBJCOPY) $(OBJCOPY_ARGS) $(OUTPUT) $(OUTPUT).bin
 
-clean :
+# make load PORT="COM3"
+load:
+	$(PYTHON) $(LOAD_TOOL) $(PORT) $(OUTPUT).bin
+
+
+clean:
 	$(CLEAN_COMMAND) $(OUTPUT) $(OUTPUT).bin
 
 error:
