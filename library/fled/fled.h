@@ -23,5 +23,5 @@ static inline void fled_on(volatile mdr_port_t *port, bit_depth_t port_out) {
 }
 
 static inline void fled_off(volatile mdr_port_t *port, bit_depth_t port_out) {
-    digital_write(port, port_out, 1);
+    digital_write(port, port_out, 0);
 }
