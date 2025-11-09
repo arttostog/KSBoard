@@ -17,12 +17,12 @@ class LoadTool:
 
             device.write(b'\x0D\x0A\x0E')
             device.write(b'\x4C')
-            device.write(LoadTool.format_value(0x08000000))
-            device.write(LoadTool.format_value(len(bytes_to_write)))
-            device.write(bytes_to_write)
+            device.write(b'\x08\x00\x00\x00')
+            device.write(len(bytes_to_write).to_bytes(4))
+            device.write(bytes_to_write[::-1])
             
             device.write(b'\x52')
-            device.write(LoadTool.format_value(0x08000000))
+            device.write(b'\x08\x00\x00\x00')
 
         except Exception as exception:
             print(f"Возникло исключение: {exception}")
@@ -32,8 +32,8 @@ class LoadTool:
         with open(path_to_file, "rb") as file:
             return file.read()
 
-    def format_value(value: int) -> bytes:
-        return value.to_bytes(4, byteorder='little')
+    # def format_value(value: int) -> bytes:
+    #     return value.to_bytes(4, byteorder='little')
 
 if __name__ == "__main__":
     if len(argv) != 3:
