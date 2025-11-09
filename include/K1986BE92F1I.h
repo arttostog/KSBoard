@@ -472,7 +472,7 @@ typedef struct {
 #pragma pack(pop)
 
 #define MDR_UART1 ((volatile mdr_uart_t*) 0x40030000)
-#define MDR_UARD2 ((volatile mdr_uart_t*) 0x40038000)
+#define MDR_UART2 ((volatile mdr_uart_t*) 0x40038000)
 
 /*
     MDR_DMA
