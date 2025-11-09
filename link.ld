@@ -1,6 +1,4 @@
-ENTRY(entry)
 MEMORY {
-    BOOT_ROM : ORIGIN = 0x00000000, LENGTH = 0x000003FF
     EEPROM   : ORIGIN = 0x08000000, LENGTH = 0x0001FFFF
     SRAM     : ORIGIN = 0x20000000, LENGTH = 0x00007FFF
 }
@@ -9,7 +7,7 @@ _stack_size = 0x2000;
 
 SECTIONS
 {
-    .boot : { KEEP(*(.isr_vector)) *(.boot) } > BOOT_ROM
+    .boot : { KEEP(*(.isr_vector)) *(.boot) } > EEPROM
     .text : { *(.text) } > EEPROM
     
     .rodata : {

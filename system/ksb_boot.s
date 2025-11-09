@@ -5,7 +5,7 @@
 .section .isr_vector
 vectors:
     .word _stack_top
-    .word reset        // RESET
+    .word entry        // RESET
     .word base_handler // NMI
     .word base_handler // Hard Fault
     .word base_handler // Memory Management Fault
@@ -55,25 +55,20 @@ vectors:
 
 .section .boot, "ax"
 
-.global entry
-
 .extern board_load
 .extern board_start
 .extern board_loop
 
-.thumb_func
 entry:
+    bl bss_clear
+    bl data_copy
+
     bl board_load
     bl board_start
 
 loop:
     bl board_loop
     b loop
-
-reset:
-    bl bss_clear
-    bl data_copy
-    b entry
 
 .thumb_func
 bss_clear:
