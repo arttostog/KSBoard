@@ -24,8 +24,8 @@ void board_start() {
         0
     };
 
-    port_out_config(MDR_PORT_D, 2, &port_config);
-    digital_write(MDR_PORT_D, 2, 1);
+    port_out_config(D2, &port_config);
+    digital_write(D2, 1);
 }
 
 void board_loop() {}
