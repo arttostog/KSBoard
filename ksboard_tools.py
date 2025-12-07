@@ -32,7 +32,7 @@ class CompileTool:
             print(compile_result.stderr)
 
             if compile_result.returncode != 0:
-                raise Exception("возвращённый код после компиляции не равен 0")
+                raise Exception(compile_result.stderr)
             return True, None
         except Exception as exception:
             return False, exception
@@ -92,9 +92,20 @@ class LoadTool:
         with open(path_to_file, "rb") as file:
             return file.read()
 
-if __name__ == "__main__":
-    output_file: str = "ksboard.elf"
-    menu: str = "\033[2J\033[H"\
+class TestTools:
+    test_output_file: str = "test_ksboard.elf"
+
+    def test_compile_tool(self) -> None:
+        compile_result: tuple[bool, Exception | None] = CompileTool.start(TestTools.test_output_file)
+        assert compile_result[0], compile_result[1]
+    
+    def test_clean_tool(self) -> None:
+        clean_result: tuple[bool, Exception | None] = CleanTool.start(TestTools.test_output_file)
+        assert clean_result[0], clean_result[1]
+
+class Main:
+    __output_file: str = "ksboard.elf"
+    __menu: str = "\033[2J\033[H"\
                 "KSBoardTools v0.1\n"\
                 "1) Полный цикл (Очистка, компиляция и загрузка)\n"\
                 "2) Очистка\n"\
@@ -102,38 +113,48 @@ if __name__ == "__main__":
                 "4) Загрузка\n"\
                 "0) Выход\n"\
                 "> "
-    success: str = "\033[2J\033[H"\
+    __success: str = "\033[2J\033[H"\
                 "Успешно выполнено\n"\
                 "Для продолжения нажмите Enter\n"
-    choice: int = -1
+    __clean_error: str = "\033[2J\033[H"\
+                "Произошла ошибка при очистке: {}"
+    __compile_error: str = "\033[2J\033[H"\
+                "Произошла ошибка при компиляции: {}"
+    __load_error: str = "\033[2J\033[H"\
+                "Произошла ошибка при загрузке: {}"
+    
+    def start() -> None:
+        choice: int = -1
+        while choice != 0:
+            print(Main.__menu, end="")
+            choice = int(input())
 
-    while choice != 0:
-        print(menu, end="")
-        choice = int(input())
-
-        if choice == 0:
-            continue
-
-        if choice == 1 or choice == 2:
-            clean_result: tuple[bool, Exception | None] = CleanTool.start(output_file)
-            if clean_result[0] == False and type(clean_result[1]) == Exception:
-                print(f"Произошла ошибка при очистке: {clean_result[1]}")
-                input()
-                continue
-        
-        if choice == 1 or choice == 3:
-            compile_result: tuple[bool, Exception | None] = CompileTool.start(output_file)
-            if compile_result[0] == False and type(compile_result[1]) == Exception:
-                print(f"Произошла ошибка при компиляции: {compile_result[1]}")
-                input()
+            if choice == 0:
                 continue
 
-        # if choice == 1 or choice == 4:
-        #     load_result: tuple[bool, Exception | None] = LoadTool.start(output_file)
-        #     if load_result[0] == False and type(load_result[1]) == Exception:
-        #         print(f"Произошла ошибка при загрузке: {compile_result[1]}")
-        #         input()
-        #         continue
+            if choice == 1 or choice == 2:
+                clean_result: tuple[bool, Exception | None] = CleanTool.start(Main.__output_file)
+                if clean_result[0] == False and choice == 2:
+                    print(Main.__clean_error.format(clean_result[1]))
+                    input()
+                    continue
+            
+            if choice == 1 or choice == 3:
+                compile_result: tuple[bool, Exception | None] = CompileTool.start(Main.__output_file)
+                if compile_result[0] == False:
+                    print(Main.__compile_error.format(compile_result[1]))
+                    input()
+                    continue
 
-        print(success, end="")
-        input()
+            # if choice == 1 or choice == 4:
+            #     load_result: tuple[bool, Exception | None] = LoadTool.start(Main.__output_file)
+            #     if load_result[0] == False:
+            #         print(Main.__load_error.format(load_result[1]))
+            #         input()
+            #         continue
+
+            print(Main.__success, end="")
+            input()
+
+if __name__ == "__main__":
+    Main.start()

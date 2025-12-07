@@ -3,3 +3,4 @@ ksboard.elf.bin
 deprecated/
 ksboard-a1/
 .vscode/
+__pycache__/
