@@ -86,7 +86,6 @@ class LoadTool:
 
             return True, None
         except Exception as exception:
-            # print(f"При загрузке возникло исключение: {exception}")
             return False, exception
 
     def __read_file(path_to_file: str) -> bytes:
@@ -95,11 +94,46 @@ class LoadTool:
 
 if __name__ == "__main__":
     output_file: str = "ksboard.elf"
+    menu: str = "\033[2J\033[H"\
+                "KSBoardTools v0.1\n"\
+                "1) Полный цикл (Очистка, компиляция и загрузка)\n"\
+                "2) Очистка\n"\
+                "3) Компиляция\n"\
+                "4) Загрузка\n"\
+                "0) Выход\n"\
+                "> "
+    success: str = "\033[2J\033[H"\
+                "Успешно выполнено\n"\
+                "Для продолжения нажмите Enter\n"
+    choice: int = -1
 
-    clean_result: tuple[bool, Exception | None] = CleanTool.start("ksboard.elf")
-    if clean_result[0] == False and type(clean_result[1]) == Exception:
-        print(f"Произошла ошибка при очистке: {clean_result[1]}")
+    while choice != 0:
+        print(menu, end="")
+        choice = int(input())
 
-    compile_result: tuple[bool, Exception | None] = CompileTool.start(output_file)
-    if compile_result[0] == False and type(compile_result[1]) == Exception:
-        print(f"Произошла ошибка при компиляции: {compile_result[1]}")
+        if choice == 0:
+            continue
+
+        if choice == 1 or choice == 2:
+            clean_result: tuple[bool, Exception | None] = CleanTool.start(output_file)
+            if clean_result[0] == False and type(clean_result[1]) == Exception:
+                print(f"Произошла ошибка при очистке: {clean_result[1]}")
+                input()
+                continue
+        
+        if choice == 1 or choice == 3:
+            compile_result: tuple[bool, Exception | None] = CompileTool.start(output_file)
+            if compile_result[0] == False and type(compile_result[1]) == Exception:
+                print(f"Произошла ошибка при компиляции: {compile_result[1]}")
+                input()
+                continue
+
+        # if choice == 1 or choice == 4:
+        #     load_result: tuple[bool, Exception | None] = LoadTool.start(output_file)
+        #     if load_result[0] == False and type(load_result[1]) == Exception:
+        #         print(f"Произошла ошибка при загрузке: {compile_result[1]}")
+        #         input()
+        #         continue
+
+        print(success, end="")
+        input()
