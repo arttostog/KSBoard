@@ -5,46 +5,43 @@ from subprocess import run
 from serial import Serial, PARITY_NONE, STOPBITS_ONE, EIGHTBITS
 
 class CompileTool:
-    file_extensions: list = ["*.s", "*.c", "*.cpp"]
-    file_folders: list = [".\\system\\", ".\\program\\", ".\\libraries\\"]
+    __file_extensions: list = ["*.s", "*.c", "*.cpp"]
+    __file_folders: list = [".\\system\\", ".\\program\\", ".\\libraries\\"]
 
-    gcc: str = "arm-none-eabi-gcc"
-    gcc_args: list = ["-Wall", "-mthumb", "-Wextra", "-ffreestanding", "-O2", "-nostartfiles", "-static", "-I./include", "-I./libraries", "-mcpu=cortex-m3", "-Tlink.ld"]
+    __gcc: str = "arm-none-eabi-gcc"
+    __gcc_args: list = ["-Wall", "-mthumb", "-Wextra", "-ffreestanding", "-O2", "-nostartfiles", "-static", "-I./include", "-I./libraries", "-mcpu=cortex-m3", "-Tlink.ld"]
 
-    def start(path_to_output_file: str) -> bool:
+    def start(path_to_output_file: str) -> tuple[bool, Exception | None]:
         try:
-            compilation_command: list = [ CompileTool.gcc, ]
-            compilation_command += CompileTool.gcc_args
-            compilation_command += CompileTool.find_files_to_compile()
-            compilation_command += [
+            compile_command: list = [ CompileTool.__gcc, ]
+            compile_command += CompileTool.__gcc_args
+            compile_command += CompileTool.__find_files_to_compile()
+            compile_command += [
                 "-o",
                 path_to_output_file,
             ]
 
-            print(f"Compilation command: {compilation_command}")
-
-            compilation_result = run(
-                compilation_command,
+            compile_result = run(
+                compile_command,
                 capture_output=True,
                 text=True,
                 timeout=30,
                 shell=False,
             )
 
-            print(compilation_result.stderr)
+            print(compile_result.stderr)
 
-            if compilation_result.returncode != 0:
-                raise Exception("Возвращённый код после компиляции не равен 0")
-            return True
+            if compile_result.returncode != 0:
+                raise Exception("возвращённый код после компиляции не равен 0")
+            return True, None
         except Exception as exception:
-            print(f"Произошла ошибка при компиляции '{path_to_output_file}': {exception}")
-            return False
+            return False, exception
     
-    def find_files_to_compile() -> list:
+    def __find_files_to_compile() -> list:
         files: list = [ ]
-        for folder in CompileTool.file_folders:
+        for folder in CompileTool.__file_folders:
             folderPath: Path = Path(folder)
-            for extension in CompileTool.file_extensions:
+            for extension in CompileTool.__file_extensions:
                 files += list(folderPath.rglob(extension))
 
         output: list = [ ]
@@ -54,20 +51,18 @@ class CompileTool:
         return output
 
 class CleanTool:
-    def start(path_to_output_file: str) -> bool:
+    def start(path_to_output_file: str) -> tuple[bool, Exception | None]:
         try:
             remove(path_to_output_file)
-            print("Успешно очищенно")
-            return True
+            return True, None
         except Exception as exception:
-            print(f"Произошла ошибка при очистке '{path_to_output_file}': {exception}")
-            return False
+            return False, exception
 
 # НЕ РАБОТАЕТ
 class LoadTool:
-    def start(port: str, path_to_file: str) -> None:
+    def start(port: str, path_to_file: str) -> tuple[bool, Exception | None]:
         try:
-            bytes_to_write: bytes = LoadTool.read_file(path_to_file)
+            bytes_to_write: bytes = LoadTool.__read_file(path_to_file)
 
             device: Serial = Serial(
                 port=port,
@@ -86,18 +81,25 @@ class LoadTool:
             
             device.write(b'\x52')
             device.write(b'\x08\x00\x00\x00')
+            
+            # ...
 
+            return True, None
         except Exception as exception:
-            print(f"При загрузке возникло исключение: {exception}")
+            # print(f"При загрузке возникло исключение: {exception}")
+            return False, exception
 
-    def read_file(path_to_file: str) -> bytes:
+    def __read_file(path_to_file: str) -> bytes:
         with open(path_to_file, "rb") as file:
             return file.read()
 
 if __name__ == "__main__":
-    CompileTool.start("ksboard.elf")
-    CleanTool.start("ksboard.elf")
-    # if len(argv) != 3:
-    #     print("Слишком мало или слишком много аргументов!")
-    #     exit(1)
-    # LoadTool.start(argv[1], argv[2])
+    output_file: str = "ksboard.elf"
+
+    clean_result: tuple[bool, Exception | None] = CleanTool.start("ksboard.elf")
+    if clean_result[0] == False and type(clean_result[1]) == Exception:
+        print(f"Произошла ошибка при очистке: {clean_result[1]}")
+
+    compile_result: tuple[bool, Exception | None] = CompileTool.start(output_file)
+    if compile_result[0] == False and type(compile_result[1]) == Exception:
+        print(f"Произошла ошибка при компиляции: {compile_result[1]}")
