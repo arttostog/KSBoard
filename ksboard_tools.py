@@ -6,7 +6,7 @@ from serial import Serial, PARITY_NONE, STOPBITS_ONE, EIGHTBITS
 
 class CompileTool:
     __file_extensions: list = ["*.s", "*.c", "*.cpp"]
-    __file_folders: list = [".\\system\\", ".\\program\\", ".\\libraries\\"]
+    __file_folders: list = ["./system/", "./program/", "./libraries/"]
 
     __gcc: str = "arm-none-eabi-gcc"
     __gcc_args: list = ["-Wall", "-mthumb", "-Wextra", "-ffreestanding", "-O2", "-nostartfiles", "-static", "-I./include", "-I./libraries", "-mcpu=cortex-m3", "-Tlink.ld"]
@@ -29,8 +29,6 @@ class CompileTool:
                 shell=False,
             )
 
-            print(compile_result.stderr)
-
             if compile_result.returncode != 0:
                 raise Exception(compile_result.stderr)
             return True, None
@@ -40,7 +38,7 @@ class CompileTool:
     def __find_files_to_compile() -> list:
         files: list = [ ]
         for folder in CompileTool.__file_folders:
-            folderPath: Path = Path(folder)
+            folderPath: Path = Path(folder).resolve()
             for extension in CompileTool.__file_extensions:
                 files += list(folderPath.rglob(extension))
 
