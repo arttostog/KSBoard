@@ -59,6 +59,7 @@ class CleanTool:
 # НЕ РАБОТАЕТ
 class LoadTool:
     def start(port: str, path_to_file: str) -> tuple[bool, Exception | None]:
+        return True, None
         try:
             bytes_to_write: bytes = LoadTool.__read_file(path_to_file)
 
@@ -120,6 +121,8 @@ class Main:
                 "Произошла ошибка при компиляции: {}"
     __load_error: str = "\033[2J\033[H"\
                 "Произошла ошибка при загрузке: {}"
+    __load_port_question: str = "\033[2J\033[H"\
+                "Введите номер COM порта: "
     
     def start() -> None:
         choice: int = -1
@@ -145,7 +148,8 @@ class Main:
                     continue
 
             # if choice == 1 or choice == 4:
-            #     load_result: tuple[bool, Exception | None] = LoadTool.start(Main.__output_file)
+            #     port_number: str = input(Main.__load_port_question)
+            #     load_result: tuple[bool, Exception | None] = LoadTool.start("COM" + port_number, Main.__output_file)
             #     if load_result[0] == False:
             #         print(Main.__load_error.format(load_result[1]))
             #         input()
