@@ -4,3 +4,4 @@ deprecated/
 ksboard-a1/
 .vscode/
 __pycache__/
+.pytest_cache/
