@@ -15,8 +15,8 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install gcc-arm-none-eabi
-      - name: Installing python
       - uses: actions/setup-python@v4
+      - name: Installing python
         with:
           python-version: "3.x"
       - name: Installing python dependencies
