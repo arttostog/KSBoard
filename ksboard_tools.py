@@ -31,6 +31,7 @@ class BuildTool:
 
             if compile_result.returncode != 0:
                 raise Exception(compile_result.stderr)
+            
             return True, None
         except Exception as exception:
             return False, exception
@@ -147,8 +148,6 @@ class KsboardToolsMain:
 
             choice = int(input())
             match choice:
-                case 0:
-                    continue
                 case 1:
                     if KsboardToolsMain.__tool_results_handler(CleanTool.start(KsboardToolsMain.__output_file), KsboardToolsMain.__clean_error, True) == False:
                         continue
