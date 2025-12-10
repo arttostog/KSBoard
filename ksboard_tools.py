@@ -70,16 +70,22 @@ class LoadTool:
                 timeout=1,
             )
 
-            device.write(b'\x0D\x0A\x0E')
+            device.write(b'\x0D\x0A\x3E')
             device.write(b'\x4C')
-            device.write(b'\x08\x00\x00\x00')
-            device.write(len(bytes_to_write).to_bytes(4))
-            device.write(bytes_to_write[::-1])
+            device.write(b'\x00\x00\x00\x08')
+
+            i = len(bytes_to_write)
+            while i >= 4:
+                device.write(b'\x00\x00\x00\x04')
+                device.write(bytes_to_write[-4:][::-1])
+                i -= 4
+            
+            if i > 0:
+                device.write(i.to_bytes(4))
+                device.write(bytes_to_write[-i:][::-1])
             
             device.write(b'\x52')
-            device.write(b'\x08\x00\x00\x00')
-            
-            # ...
+            device.write(b'\x00\x00\x00\x08')
 
             return True, None
         except Exception as exception:
