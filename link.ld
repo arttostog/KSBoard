@@ -4,7 +4,7 @@ MEMORY {
     SRAM     : ORIGIN = 0x20000000, LENGTH = 32K
 }
 
-_stack_size = 0x2000;
+_stack_size = 4K;
 
 SECTIONS
 {

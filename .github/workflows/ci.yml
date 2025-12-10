@@ -4,17 +4,26 @@ on:
   push:
     branches: [main, dev]
   pull_request:
-    branches: [main]
+    branches: [main, dev]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Install dependencies
+      - name: Устанавливаем компилятор
         run: |
           sudo apt-get update
-          sudo apt-get install gcc-arm-none-eabi make
-      - name: Build project
+          sudo apt-get install gcc-arm-none-eabi
+      - name: Устанавливаем python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.x"
+      - name: Устанавливаем зависимости для python
         run: |
-          make build
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Тестируем
+        run: |
+          pip install pytest
+          pytest -k TestTool -q ksboard_tools.py
