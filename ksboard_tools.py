@@ -4,7 +4,7 @@ from pathlib import Path
 from subprocess import run
 from serial import Serial, PARITY_NONE, STOPBITS_ONE, EIGHTBITS
 
-class CompileTool:
+class BuildTool:
     __file_extensions: list = ["*.s", "*.c", "*.cpp"]
     __file_folders: list = ["./system/", "./program/", "./libraries/"]
 
@@ -13,9 +13,9 @@ class CompileTool:
 
     def start(path_to_output_file: str) -> tuple[bool, Exception | None]:
         try:
-            compile_command: list = [ CompileTool.__gcc, ]
-            compile_command += CompileTool.__gcc_args
-            compile_command += CompileTool.__find_files_to_compile()
+            compile_command: list = [ BuildTool.__gcc, ]
+            compile_command += BuildTool.__gcc_args
+            compile_command += BuildTool.__find_files_to_compile()
             compile_command += [
                 "-o",
                 path_to_output_file,
@@ -37,16 +37,13 @@ class CompileTool:
     
     def __find_files_to_compile() -> list:
         files: list = [ ]
-        for folder in CompileTool.__file_folders:
+        for folder in BuildTool.__file_folders:
             folderPath: Path = Path(folder).resolve()
-            for extension in CompileTool.__file_extensions:
-                files += list(folderPath.rglob(extension))
+            for extension in BuildTool.__file_extensions:
+                for file in list(folderPath.rglob(extension)):
+                    files.append(str(file))
 
-        output: list = [ ]
-        for file in files:
-            output.append(str(file))
-
-        return output
+        return files
 
 class CleanTool:
     def start(path_to_output_file: str) -> tuple[bool, Exception | None]:
@@ -58,7 +55,7 @@ class CleanTool:
 
 # НЕ РАБОТАЕТ
 class LoadTool:
-    def start(port: str, path_to_file: str) -> tuple[bool, Exception | None]:
+    def start(path_to_file: str, port: str) -> tuple[bool, Exception | None]:
         return True, None
         try:
             bytes_to_write: bytes = LoadTool.__read_file(path_to_file)
@@ -91,72 +88,125 @@ class LoadTool:
         with open(path_to_file, "rb") as file:
             return file.read()
 
-class TestTools:
+class TestTool:
     test_output_file: str = "test_ksboard.elf"
 
     def test_compile_tool(self) -> None:
-        compile_result: tuple[bool, Exception | None] = CompileTool.start(TestTools.test_output_file)
+        compile_result: tuple[bool, Exception | None] = BuildTool.start(TestTool.test_output_file)
         assert compile_result[0], compile_result[1]
     
     def test_clean_tool(self) -> None:
-        clean_result: tuple[bool, Exception | None] = CleanTool.start(TestTools.test_output_file)
+        clean_result: tuple[bool, Exception | None] = CleanTool.start(TestTool.test_output_file)
         assert clean_result[0], clean_result[1]
 
-class Main:
+class KsboardToolsMain:
     __output_file: str = "ksboard.elf"
-    __menu: str = "\033[2J\033[H"\
-                "KSBoardTools v0.1\n"\
-                "1) Полный цикл (Очистка, компиляция и загрузка)\n"\
-                "2) Очистка\n"\
-                "3) Компиляция\n"\
-                "4) Загрузка\n"\
+
+    __clean: str = "\033[2J\033[H"
+    
+    __menu: str = "KSBoardTools v0.1\n"\
+                "1) Очистка\n"\
+                "2) Компиляция\n"\
+                "3) Загрузка\n"\
                 "0) Выход\n"\
                 "> "
-    __success: str = "\033[2J\033[H"\
-                "Успешно выполнено\n"\
-                "Для продолжения нажмите Enter\n"
-    __clean_error: str = "\033[2J\033[H"\
-                "Произошла ошибка при очистке: {}"
-    __compile_error: str = "\033[2J\033[H"\
-                "Произошла ошибка при компиляции: {}"
-    __load_error: str = "\033[2J\033[H"\
-                "Произошла ошибка при загрузке: {}"
-    __load_port_question: str = "\033[2J\033[H"\
-                "Введите номер COM порта: "
     
-    def start() -> None:
+    __load_com_port_question: str = "Введите номер COM порта: "
+    
+    __success: str = "Успешно выполнено\n"\
+                "Для продолжения нажмите Enter\n"
+    
+    __help: str = "KSBoardTools v0.1\n"\
+                "Справка по быстрым командам:\n"\
+                "- clean [название файла] - удаляет файл с прошивкой под указанным или стандартным именем\n"\
+                "- build [название файла] - собирает прошивку в файл с указанным или со стандартным именем\n"\
+                "- load <порт> [название файла] - загружает прошивку по указанному порту с файла с указанным или стандартным именем"
+
+    __clean_error: str = "Произошла ошибка при очистке: {}"
+    __build_error: str = "Произошла ошибка при компиляции: {}"
+    __load_error: str = "Произошла ошибка при загрузке: {}"
+    __undefined_command_error: str = "Неизвестная команда"
+    __too_many_arguments_error: str = "Слишком много аргументов"
+    __too_few_arguments_error: str = "Слишком мало аргументов"
+    
+    def __tool_results_handler(tool_result: tuple[bool, Exception | None], exception_message: str, is_menu: bool) -> bool:
+        if tool_result[0] == False:
+            match is_menu:
+                case True:
+                    print(KsboardToolsMain.__clean + exception_message.format(tool_result[1]))
+                    input()
+                case False:
+                    print(exception_message.format(tool_result[1]))
+            return False
+        return True
+
+    def __show_menu() -> None:
         choice: int = -1
         while choice != 0:
-            print(Main.__menu, end="")
+            print(KsboardToolsMain.__clean + KsboardToolsMain.__menu, end="")
+
             choice = int(input())
-
-            if choice == 0:
-                continue
-
-            if choice == 1 or choice == 2:
-                clean_result: tuple[bool, Exception | None] = CleanTool.start(Main.__output_file)
-                if clean_result[0] == False and choice == 2:
-                    print(Main.__clean_error.format(clean_result[1]))
-                    input()
+            match choice:
+                case 0:
                     continue
-            
-            if choice == 1 or choice == 3:
-                compile_result: tuple[bool, Exception | None] = CompileTool.start(Main.__output_file)
-                if compile_result[0] == False:
-                    print(Main.__compile_error.format(compile_result[1]))
-                    input()
+                case 1:
+                    if KsboardToolsMain.__tool_results_handler(CleanTool.start(KsboardToolsMain.__output_file), KsboardToolsMain.__clean_error, True) == False:
+                        continue
+                case 2:
+                    if KsboardToolsMain.__tool_results_handler(BuildTool.start(KsboardToolsMain.__output_file), KsboardToolsMain.__build_error, True) == False:
+                        continue
+                case 3:
+                    port_number: str = input(KsboardToolsMain.__clean + KsboardToolsMain.__load_com_port_question)
+                    if KsboardToolsMain.__tool_results_handler(LoadTool.start(KsboardToolsMain.__output_file, "COM" + port_number), KsboardToolsMain.__load_error, True) == False:
+                        continue
+                case _:
                     continue
 
-            # if choice == 1 or choice == 4:
-            #     port_number: str = input(Main.__load_port_question)
-            #     load_result: tuple[bool, Exception | None] = LoadTool.start("COM" + port_number, Main.__output_file)
-            #     if load_result[0] == False:
-            #         print(Main.__load_error.format(load_result[1]))
-            #         input()
-            #         continue
-
-            print(Main.__success, end="")
+            print(KsboardToolsMain.__clean + KsboardToolsMain.__success, end="")
             input()
+    
+    def main() -> None:
+        argc: int = len(argv)
+
+        if argc == 1:
+            KsboardToolsMain.__show_menu()
+            return
+
+        match argv[1]:
+            case "clean":
+                match argc:
+                    case 2:
+                        KsboardToolsMain.__tool_results_handler(CleanTool.start(KsboardToolsMain.__output_file), KsboardToolsMain.__clean_error, False)
+                    case 3:
+                        KsboardToolsMain.__tool_results_handler(CleanTool.start(argv[2]), KsboardToolsMain.__clean_error, False)
+                    case _:
+                        print(KsboardToolsMain.__too_many_arguments_error)
+            case "build":
+                match argc:
+                    case 2:
+                        KsboardToolsMain.__tool_results_handler(BuildTool.start(KsboardToolsMain.__output_file), KsboardToolsMain.__build_error, False)
+                    case 3:
+                        KsboardToolsMain.__tool_results_handler(BuildTool.start(argv[2]), KsboardToolsMain.__build_error, False)
+                    case _:
+                        print(KsboardToolsMain.__too_many_arguments_error)
+            case "load":
+                match argc:
+                    case 2:
+                        print(KsboardToolsMain.__too_few_arguments_error)
+                    case 3:
+                        KsboardToolsMain.__tool_results_handler(LoadTool.start(KsboardToolsMain.__output_file, argv[2]), KsboardToolsMain.__load_error, False)
+                    case 4:
+                        KsboardToolsMain.__tool_results_handler(LoadTool.start(argv[3], argv[2]), KsboardToolsMain.__load_error, False)
+                    case _:
+                        print(KsboardToolsMain.__too_many_arguments_error)
+            case "help":
+                match argc:
+                    case 2:
+                        print(KsboardToolsMain.__help)
+                    case _:
+                        print(KsboardToolsMain.__too_many_arguments_error)
+            case _:
+                print(KsboardToolsMain.__undefined_command_error)
 
 if __name__ == "__main__":
-    Main.start()
+    KsboardToolsMain.main()

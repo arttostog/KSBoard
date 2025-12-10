@@ -26,4 +26,4 @@ jobs:
       - name: Тестируем
         run: |
           pip install pytest
-          pytest -k TestTools -q ksboard_tools.py
+          pytest -k TestTool -q ksboard_tools.py
