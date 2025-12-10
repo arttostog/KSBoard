@@ -1,4 +1,4 @@
-from sys import argv, exit
+from sys import argv
 from os import remove
 from pathlib import Path
 from subprocess import run

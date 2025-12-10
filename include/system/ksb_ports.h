@@ -2,26 +2,27 @@
 
 #include <K1986BE92F1I.h>
 #include <system/ksb_delay.h>
+#include <system/ksb_types.h>
 
 typedef struct {
-    bit_depth_t is_output;
-    bit_depth_t function;
-    bit_depth_t is_digital;
-    bit_depth_t enable_pull_up;
-    bit_depth_t enable_pull_down;
-    bit_depth_t shm_mode;
-    bit_depth_t pd_mode;
-    bit_depth_t power_mode;
-    bit_depth_t use_filter;
+    uint8_t oe;
+    uint8_t mode;
+    uint8_t analog_en;
+    uint8_t pull_up;
+    uint8_t pull_down;
+    uint8_t port_shm;
+    uint8_t port_pd;
+    uint8_t pwr;
+    uint8_t gfen;
 } port_out_config_t;
 
-void port_out_config(volatile mdr_port_t *port, bit_depth_t port_out, const port_out_config_t *config);
+void port_out_config(volatile mdr_port_t *port, uint8_t port_out, const port_out_config_t *config);
 
-bit_depth_t digital_read(volatile mdr_port_t *port, bit_depth_t port_out);
-void digital_write(volatile mdr_port_t *port, bit_depth_t port_out, bit_depth_t data);
+uint8_t digital_read(volatile mdr_port_t *port, uint8_t port_out);
+void digital_write(volatile mdr_port_t *port, uint8_t port_out, uint8_t data);
 
-bit_depth_t analog_read(bit_depth_t port_out);
-void analog_write(bit_depth_t data);
+// size_t analog_read(uint8_t port_out);
+// void analog_write(size_t data);
 
 #define A0 MDR_PORT_A, 0
 #define A1 MDR_PORT_A, 1
