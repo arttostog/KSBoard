@@ -57,7 +57,7 @@ class CleanTool:
 # НЕ РАБОТАЕТ
 class LoadTool:
     def start(path_to_file: str, port: str) -> tuple[bool, Exception | None]:
-        return True, None
+        return True, None # Заглушка
         try:
             bytes_to_write: bytes = LoadTool.__read_file(path_to_file)
 
@@ -78,15 +78,11 @@ class LoadTool:
             while i >= 4:
                 device.write(b'\x00\x00\x00\x04')
                 device.write(bytes_to_write[-4:][::-1])
-                i -= 4
             
             if i > 0:
                 device.write(i.to_bytes(4))
                 device.write(bytes_to_write[-i:][::-1])
             
-            device.write(b'\x52')
-            device.write(b'\x00\x00\x00\x08')
-
             return True, None
         except Exception as exception:
             return False, exception
@@ -94,6 +90,24 @@ class LoadTool:
     def __read_file(path_to_file: str) -> bytes:
         with open(path_to_file, "rb") as file:
             return file.read()
+
+class StartTool:
+    def start(port: str) -> tuple[bool, Exception | None]:
+        return True, None # Заглушка
+        try:
+            device: Serial = Serial(
+                port=port,
+                baudrate=9600,
+                parity=PARITY_NONE,
+                stopbits=STOPBITS_ONE,
+                bytesize=EIGHTBITS,
+                timeout=1,
+            )
+
+            device.write(b'\x52')
+            device.write(b'\x00\x00\x00\x08')
+        except Exception as exception:
+            return False, exception
 
 class TestTool:
     test_output_file: str = "test_ksboard.elf"
@@ -115,23 +129,27 @@ class KsboardToolsMain:
                 "1) Очистка\n"\
                 "2) Компиляция\n"\
                 "3) Загрузка\n"\
+                "4) Запуск прошивки\n"\
                 "0) Выход\n"\
                 "> "
     
-    __load_com_port_question: str = "Введите номер COM порта: "
+    __com_port_question: str = "Введите номер COM порта: "
     
     __success: str = "Успешно выполнено\n"\
                 "Для продолжения нажмите Enter\n"
     
     __help: str = "KSBoardTools v0.1\n"\
                 "Справка по быстрым командам:\n"\
+                "- help - выводит список быстрых команд утилиты\n"\
                 "- clean [название файла] - удаляет файл с прошивкой под указанным или стандартным именем\n"\
                 "- build [название файла] - собирает прошивку в файл с указанным или со стандартным именем\n"\
-                "- load <порт> [название файла] - загружает прошивку по указанному порту с файла с указанным или стандартным именем"
+                "- load <номер COM-порта> [название файла] - загружает прошивку по указанному порту с файла с указанным или стандартным именем\n"\
+                "- start <номер COM-порта> - запускает прошивку на устройстве по указанному порту"
 
     __clean_error: str = "Произошла ошибка при очистке: {}"
     __build_error: str = "Произошла ошибка при компиляции: {}"
     __load_error: str = "Произошла ошибка при загрузке: {}"
+    __start_error: str = "Произошла ошибка при запуске прошивки: {}"
     __undefined_command_error: str = "Неизвестная команда"
     __too_many_arguments_error: str = "Слишком много аргументов"
     __too_few_arguments_error: str = "Слишком мало аргументов"
@@ -161,8 +179,12 @@ class KsboardToolsMain:
                     if KsboardToolsMain.__tool_results_handler(BuildTool.start(KsboardToolsMain.__output_file), KsboardToolsMain.__build_error, True) == False:
                         continue
                 case 3:
-                    port_number: str = input(KsboardToolsMain.__clean + KsboardToolsMain.__load_com_port_question)
+                    port_number: str = input(KsboardToolsMain.__clean + KsboardToolsMain.__com_port_question)
                     if KsboardToolsMain.__tool_results_handler(LoadTool.start(KsboardToolsMain.__output_file, "COM" + port_number), KsboardToolsMain.__load_error, True) == False:
+                        continue
+                case 4:
+                    port_number: str = input(KsboardToolsMain.__clean + KsboardToolsMain.__com_port_question)
+                    if KsboardToolsMain.__tool_results_handler(StartTool.start("COM" + port_number), KsboardToolsMain.__start_error, True) == False:
                         continue
                 case _:
                     continue
@@ -201,7 +223,15 @@ class KsboardToolsMain:
                     case 3:
                         KsboardToolsMain.__tool_results_handler(LoadTool.start(KsboardToolsMain.__output_file, argv[2]), KsboardToolsMain.__load_error, False)
                     case 4:
-                        KsboardToolsMain.__tool_results_handler(LoadTool.start(argv[3], argv[2]), KsboardToolsMain.__load_error, False)
+                        KsboardToolsMain.__tool_results_handler(LoadTool.start(argv[3], "COM" + argv[2]), KsboardToolsMain.__load_error, False)
+                    case _:
+                        print(KsboardToolsMain.__too_many_arguments_error)
+            case "start":
+                match argc:
+                    case 2:
+                        print(KsboardToolsMain.__too_few_arguments_error)
+                    case 3:
+                        KsboardToolsMain.__tool_results_handler(StartTool.start("COM" + argv[2]), KsboardToolsMain.__start_error, False)
                     case _:
                         print(KsboardToolsMain.__too_many_arguments_error)
             case "help":
