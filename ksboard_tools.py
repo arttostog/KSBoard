@@ -54,16 +54,12 @@ class CleanTool:
         except Exception as exception:
             return False, exception
 
-# TODO: Объединить LoadTool и StartTool в единое целое. При создании объекта их объединённого класса единожды подключаться к порту
-
 # НЕ РАБОТАЕТ
-class LoadTool:
-    def start(path_to_file: str, port: str) -> tuple[bool, Exception | None]:
-        return True, None # Заглушка
+class ConnectTool:
+    def __init__(self, port: str) -> None:
+        return # Заглушка
         try:
-            bytes_to_write: bytes = LoadTool.__read_file(path_to_file)
-
-            device: Serial = Serial(
+            self.device: Serial = Serial(
                 port=port,
                 baudrate=9600,
                 parity=PARITY_NONE,
@@ -72,45 +68,57 @@ class LoadTool:
                 timeout=1,
             )
 
-            device.write(b'\x0D\x0A\x3E')
-            device.write(b'\x4C')
-            device.write(b'\x00\x00\x00\x08')
+            self.device.write(b'\x0D\x0A\x3E')
+        except Exception:
+            raise
+    
+    def load(self, path_to_file: str) -> tuple[bool, Exception | None]:
+        return True, None # Заглушка
+        try:
+            bytes_to_write: bytes = self.__read_file(path_to_file)
+            bytes_to_write_remainder = len(bytes_to_write) % 4
+            load_address: int = 0x08000000
 
-            i = len(bytes_to_write)
-            while i >= 4:
-                device.write(b'\x00\x00\x00\x04')
-                device.write(bytes_to_write[-4:][::-1])
+            for i in range(0, len(bytes_to_write) - bytes_to_write_remainder, 4):
+                self.device.write(b'\x4C')
+                self.device.write(load_address.to_bytes(4, "little"))
+                self.device.write(b'\x04\x00\x00\x00')
+                self.device.write(bytes_to_write[i])
+                self.device.write(bytes_to_write[i + 1])
+                self.device.write(bytes_to_write[i + 2])
+                self.device.write(bytes_to_write[i + 3])
+                load_address += 4
             
-            if i > 0:
-                device.write(i.to_bytes(4))
-                device.write(bytes_to_write[-i:][::-1])
-            
+            if bytes_to_write_remainder != 0:
+                self.device.write(b'\x4C')
+                self.device.write(load_address.to_bytes(4, "little"))
+                self.device.write(bytes_to_write_remainder.to_bytes(4, "little"))
+                self.device.write(bytes_to_write[-bytes_to_write_remainder:])
+
             return True, None
         except Exception as exception:
             return False, exception
-
+        
+    
     def __read_file(path_to_file: str) -> bytes:
         with open(path_to_file, "rb") as file:
             return file.read()
-
-class StartTool:
-    def start(port: str) -> tuple[bool, Exception | None]:
+    
+    def start(self) -> tuple[bool, Exception | None]:
         return True, None # Заглушка
         try:
-            device: Serial = Serial(
-                port=port,
-                baudrate=9600,
-                parity=PARITY_NONE,
-                stopbits=STOPBITS_ONE,
-                bytesize=EIGHTBITS,
-                timeout=1,
-            )
-
-            device.write(b'\x0D\x0A\x3E')
-            device.write(b'\x52')
-            device.write(b'\x00\x00\x00\x08')
+            self.device.write(b'\x52')
+            self.device.write(b'\x00\x00\x00\x08')
+            return True, None
         except Exception as exception:
             return False, exception
+    
+    def __del__(self) -> None:
+        return # Заглушка
+        try:
+            self.device.close()
+        except Exception:
+            raise
 
 class TestTool:
     test_output_file: str = "test_ksboard.elf"
@@ -131,8 +139,12 @@ class KsboardToolsMain:
     __menu: str = "KSBoardTools v0.1\n"\
                 "1) Очистка\n"\
                 "2) Компиляция\n"\
-                "3) Загрузка\n"\
-                "4) Запуск прошивки\n"\
+                "3) Подключится к устройству\n"\
+                "0) Выход\n"\
+                "> "
+    __menu_connect: str = "KSBoardTools v0.1\n"\
+                "1) Загрузка\n"\
+                "2) Запуск\n"\
                 "0) Выход\n"\
                 "> "
     
@@ -151,6 +163,7 @@ class KsboardToolsMain:
 
     __clean_error: str = "Произошла ошибка при очистке: {}"
     __build_error: str = "Произошла ошибка при компиляции: {}"
+    __connect_error: str = "Произошла ошибка при попытке подключения к устройству: {}"
     __load_error: str = "Произошла ошибка при загрузке: {}"
     __start_error: str = "Произошла ошибка при запуске прошивки: {}"
     __undefined_command_error: str = "Неизвестная команда"
@@ -183,17 +196,46 @@ class KsboardToolsMain:
                         continue
                 case 3:
                     port_number: str = input(KsboardToolsMain.__clean + KsboardToolsMain.__com_port_question)
-                    if KsboardToolsMain.__tool_results_handler(LoadTool.start(KsboardToolsMain.__output_file, "COM" + port_number), KsboardToolsMain.__load_error, True) == False:
-                        continue
-                case 4:
-                    port_number: str = input(KsboardToolsMain.__clean + KsboardToolsMain.__com_port_question)
-                    if KsboardToolsMain.__tool_results_handler(StartTool.start("COM" + port_number), KsboardToolsMain.__start_error, True) == False:
-                        continue
+                    try:
+                        KsboardToolsMain.__show_menu_connection("COM" + port_number)
+                    except Exception as exception:
+                        print(KsboardToolsMain.__clean + KsboardToolsMain.__connect_error.format(exception))
+                        input()
+                    continue
                 case _:
                     continue
 
             print(KsboardToolsMain.__clean + KsboardToolsMain.__success, end="")
             input()
+    
+    def __show_menu_connection(port: str) -> None:
+        try:
+            connect: ConnectTool = ConnectTool(port)
+        except Exception:
+            raise
+
+        choice: int = -1
+        while choice != 0:
+            print(KsboardToolsMain.__clean + KsboardToolsMain.__menu_connect, end="")
+
+            choice = int(input())
+            match choice:
+                case 1:
+                    if KsboardToolsMain.__tool_results_handler(connect.load(KsboardToolsMain.__output_file), KsboardToolsMain.__load_error, True) == False:
+                        continue
+                case 2:
+                    if KsboardToolsMain.__tool_results_handler(connect.start(), KsboardToolsMain.__start_error, True) == False:
+                        continue
+                case _:
+                    continue 
+            
+            print(KsboardToolsMain.__clean + KsboardToolsMain.__success, end="")
+            input()
+
+        try:
+            del connect
+        except Exception:
+            raise
     
     def main() -> None:
         argc: int = len(argv)
@@ -224,9 +266,17 @@ class KsboardToolsMain:
                     case 2:
                         print(KsboardToolsMain.__too_few_arguments_error)
                     case 3:
-                        KsboardToolsMain.__tool_results_handler(LoadTool.start(KsboardToolsMain.__output_file, argv[2]), KsboardToolsMain.__load_error, False)
+                        try:
+                            connect: ConnectTool = ConnectTool("COM" + argv[2])
+                            KsboardToolsMain.__tool_results_handler(connect.load(KsboardToolsMain.__output_file), KsboardToolsMain.__load_error, False)
+                        except Exception as exception:
+                            print(KsboardToolsMain.__clean + KsboardToolsMain.__connect_error.format(exception))
                     case 4:
-                        KsboardToolsMain.__tool_results_handler(LoadTool.start(argv[3], "COM" + argv[2]), KsboardToolsMain.__load_error, False)
+                        try:
+                            connect: ConnectTool = ConnectTool("COM" + argv[2])
+                            KsboardToolsMain.__tool_results_handler(connect.load(argv[3]), KsboardToolsMain.__load_error, False)
+                        except Exception as exception:
+                            print(KsboardToolsMain.__clean + KsboardToolsMain.__connect_error.format(exception))
                     case _:
                         print(KsboardToolsMain.__too_many_arguments_error)
             case "start":
@@ -234,7 +284,11 @@ class KsboardToolsMain:
                     case 2:
                         print(KsboardToolsMain.__too_few_arguments_error)
                     case 3:
-                        KsboardToolsMain.__tool_results_handler(StartTool.start("COM" + argv[2]), KsboardToolsMain.__start_error, False)
+                        try:
+                            connect: ConnectTool = ConnectTool("COM" + argv[2])
+                            KsboardToolsMain.__tool_results_handler(connect.start(), KsboardToolsMain.__start_error, False)
+                        except Exception as exception:
+                            print(KsboardToolsMain.__clean + KsboardToolsMain.__connect_error.format(exception))
                     case _:
                         print(KsboardToolsMain.__too_many_arguments_error)
             case "help":
