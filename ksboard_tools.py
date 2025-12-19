@@ -54,6 +54,8 @@ class CleanTool:
         except Exception as exception:
             return False, exception
 
+# TODO: Объединить LoadTool и StartTool в единое целое. При создании объекта их объединённого класса единожды подключаться к порту
+
 # НЕ РАБОТАЕТ
 class LoadTool:
     def start(path_to_file: str, port: str) -> tuple[bool, Exception | None]:
@@ -104,6 +106,7 @@ class StartTool:
                 timeout=1,
             )
 
+            device.write(b'\x0D\x0A\x3E')
             device.write(b'\x52')
             device.write(b'\x00\x00\x00\x08')
         except Exception as exception:
