@@ -59,9 +59,9 @@ vectors:
 .extern board_start
 .extern board_loop
 
-.global reset_handler
+.global Reset_Handler
 
-reset_handler:
+Reset_Handler:
     bl bss_clear
     bl data_copy
 
