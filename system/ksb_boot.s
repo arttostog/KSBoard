@@ -84,13 +84,7 @@ Reset_Handler:
     mov r2, r0
     mov r3, r0
     bl board_load
-
-    mov r0, #0
-    mov r1, r0
     bl board_start
-
-    mov r0, #0
-    mov r1, r0
 .loop:
     bl board_loop
     b .loop
