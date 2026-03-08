@@ -1,4 +1,4 @@
-#include <K1986BE92F1I.h>
+#include <MDR1211F1I.h>
 
 void board_load() {
     MDR_BKP->reg_0e |= LDO_TRIM << 8;
