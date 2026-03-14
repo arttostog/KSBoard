@@ -8,38 +8,35 @@ _stack_size = 4K;
 
 SECTIONS
 {
-    .boot : { KEEP(*(.isr_vector)) *(.boot) } > EEPROM
-    .text : { *(.text) } > EEPROM
-    
-    .rodata : {
+    .text : {
+        KEEP(*(.isr_vector))
+        *(.boot*)
+        *(.text*)
+        *(.rodata*)
         . = ALIGN(4);
-        *(.rodata)
-        . = ALIGN(4);
-    } > SRAM
+    } > EEPROM
 
-    .data : AT (ADDR(.text) + SIZEOF(.text)) {
-        . = ALIGN(4);
+    .data : {
         _data_start = .;
-        *(.data)
+        *(.data*)
         . = ALIGN(4);
         _data_end = .;
-    } > SRAM
+    } > SRAM AT > EEPROM
+
+    _data_start_flash = LOADADDR(.data);
     
     .bss : {
-        . = ALIGN(4);
         _bss_start = .;
-        *(.bss)
+        *(.bss*)
+        *(COMMON)
         . = ALIGN(4);
         _bss_end = .;
     } > SRAM
 
     .stack (NOLOAD) : {
-        . = ALIGN(4);
+        . = ALIGN(8);
         . += _stack_size;
-        . = ALIGN(4);
-        _stack_bottom = .;
+        . = ALIGN(8);
+        _stack_top = .;
     } > SRAM
-
-    _data_start_flash = LOADADDR(.data);
-    _data_size = SIZEOF(.data);
 }

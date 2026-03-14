@@ -2,9 +2,10 @@
 .cpu cortex-m3
 .thumb
 
-.section .isr_vector
+.section .isr_vector, "ax"
+.type vectors, %object
 vectors:
-    .word _stack_bottom
+    .word _stack_top
     .word Reset_Handler // RESET
     .word base_handler  // NMI
     .word base_handler  // Hard Fault
@@ -51,32 +52,33 @@ vectors:
 
 .global Reset_Handler
 
+.thumb_func
 Reset_Handler:
-// Очистка bss
+    ldr sp, =_stack_top
+
+    // Очистка bss
     ldr r0, =_bss_start
     ldr r1, =_bss_end
     mov r2, #0
 .bss_clear_loop:
     cmp r0, r1
-    beq .bss_clear_end
-
+    bhs .bss_clear_end
     str r2, [r0], #4
-    blt .bss_clear_loop
+    b .bss_clear_loop
 .bss_clear_end:
-// Копирование data
+    // Копирование data
     ldr r0, =_data_start_flash
     ldr r1, =_data_start
+    ldr r2, =_data_end
 
-    cmp r0, r1
+    subs r2, r2, r1
     beq .data_copy_end
+    lsrs r2, r2, #2
 
-    ldr r2, =_data_size
-    cmp r2, #0
-    beq .data_copy_end
 .data_copy_loop:
     ldr r3, [r0], #4
     str r3, [r1], #4
-    subs r2, r2, #4
+    subs r2, r2, #1
     bne .data_copy_loop
 .data_copy_end:
     mov r0, #0
@@ -89,5 +91,7 @@ Reset_Handler:
     bl board_loop
     b .loop
 
+.thumb_func
 base_handler:
-    b .
+    nop
+    b base_handler
