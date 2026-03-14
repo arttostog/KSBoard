@@ -4,7 +4,7 @@
 
 .section .isr_vector
 vectors:
-    .word _stack_top
+    .word _stack_bottom
     .word Reset_Handler // RESET
     .word base_handler  // NMI
     .word base_handler  // Hard Fault

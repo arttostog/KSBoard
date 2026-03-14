@@ -35,9 +35,9 @@ SECTIONS
 
     .stack (NOLOAD) : {
         . = ALIGN(4);
-        _stack_top = .;
         . += _stack_size;
         . = ALIGN(4);
+        _stack_bottom = .;
     } > SRAM
 
     _data_start_flash = LOADADDR(.data);
