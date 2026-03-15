@@ -3,6 +3,8 @@
 #include <mdr1211f1i.h>
 #include <system/ksb_types.h>
 
+#define UART_CLOCK 4000000.0f
+
 void uart_start(size_t baud_rate);
 void uart_stop();
 
