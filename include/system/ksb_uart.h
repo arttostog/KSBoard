@@ -1,6 +1,6 @@
 #pragma once
 
-#include <MDR1211F1I.h>
+#include <mdr1211f1i.h>
 #include <system/ksb_types.h>
 
 void uart_start(size_t baud_rate);
