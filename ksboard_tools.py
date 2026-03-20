@@ -139,7 +139,7 @@ class KsboardToolsMain:
     __menu: str = "KSBoardTools v0.1\n"\
                 "1) Очистка\n"\
                 "2) Компиляция\n"\
-                "3) Подключится к устройству\n"\
+                "3) Подключиться к устройству\n"\
                 "0) Выход\n"\
                 "> "
     __menu_connect: str = "KSBoardTools v0.1\n"\

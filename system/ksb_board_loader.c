@@ -1,4 +1,4 @@
-#include <K1986BE92F1I.h>
+#include <mdr1211f1i.h>
 
 void board_load() {
     MDR_BKP->reg_0e |= LDO_TRIM << 8;
@@ -8,6 +8,6 @@ void board_load() {
     // Назначаем везде HSI (8 МГц)
     MDR_RST_CLK->cpu_clock = 0;
 
-    // Включаем тактовую частоту на UART2 (4 МГц?)
+    // Включаем тактовую частоту на UART2 (4 МГц)
     MDR_RST_CLK->uart_clock |= 1 << 25;
 }

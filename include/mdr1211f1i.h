@@ -24,7 +24,7 @@ typedef struct {
     volatile size_t cmd;
     volatile size_t adr;
     volatile size_t di;
-    volatile size_t data; // Обозначение в спецификации - "do"
+    volatile size_t do_;
     volatile size_t key;
 } mdr_eeprom_t;
 

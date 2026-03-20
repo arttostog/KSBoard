@@ -1,6 +1,6 @@
 #pragma once
 
-#include <K1986BE92F1I.h>
+#include <mdr1211f1i.h>
 #include <system/ksb_delay.h>
 #include <system/ksb_types.h>
 
@@ -23,6 +23,8 @@ void digital_write(volatile mdr_port_t *port, uint8_t port_out, uint8_t data);
 
 // size_t analog_read(uint8_t port_out);
 // void analog_write(size_t data);
+
+#define PORT_OUT_MASK 0b1111
 
 #define A0 MDR_PORT_A, 0
 #define A1 MDR_PORT_A, 1

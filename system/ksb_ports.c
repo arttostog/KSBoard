@@ -1,7 +1,7 @@
 #include <system/ksb_ports.h>
 
 void port_out_config(volatile mdr_port_t *port, uint8_t port_out, const port_out_config_t *config) {
-    port_out &= 15;
+    port_out &= PORT_OUT_MASK;
 
     port->func = (port->func & ~(3 << (port_out * 2))) | (config->mode & 3) << port_out * 2;
     port->pwr = (port->pwr & ~(3 << (port_out * 2))) | (config->pwr & 3) << port_out * 2;
@@ -15,11 +15,11 @@ void port_out_config(volatile mdr_port_t *port, uint8_t port_out, const port_out
 }
 
 uint8_t digital_read(volatile mdr_port_t *port, uint8_t port_out) {
-    return (port->rxtx >> (port_out & 15)) & 1;
+    return (port->rxtx >> (port_out & PORT_OUT_MASK)) & 1;
 }
 
 void digital_write(volatile mdr_port_t *port, uint8_t port_out, uint8_t data) {
-    port_out &= 15;
+    port_out &= PORT_OUT_MASK;
     port->rxtx = (port->rxtx & ~(1 << port_out)) | (data & 1) << port_out;
 }
 
